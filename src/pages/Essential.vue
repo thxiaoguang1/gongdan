@@ -49,6 +49,7 @@
 <script>
 import Vue from 'vue'
 import Axios from 'axios'
+import Url from '@/api/index'
 import Dropdown from '../components/Dropdown'
 import { Field, CellGroup, Cell, RadioGroup, Radio, Collapse, CollapseItem, DatetimePicker, Popup, Button, Toast, NavBar } from 'vant';
 export default {
@@ -155,6 +156,12 @@ export default {
       this.phone=res.data[0].phone;
       this.zuoji=res.data[0].zuoji;
     }).catch((err)=>{
+
+    })
+    // 写法例如
+    Axios.get(Url+'/todos').then((res)=>{
+      console.log(res)
+    }).catch((res)=>{
 
     })
   },
