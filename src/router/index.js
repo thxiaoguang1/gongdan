@@ -19,6 +19,7 @@ import NotCompleted from '@/components/NotCompleted'
 import StartAssign from '@/pages/StartAssign'
 import StartState from '@/pages/StartState'
 import statePlantJump from '@/pages/statePlant_jump'
+import Role from '@/pages/role'
 Vue.use(Router)
 
 export default new Router({
@@ -55,6 +56,12 @@ export default new Router({
       path: '/essential',
       name: 'Essential',
       component: Essential
+    },
+    {
+      //个人中心-----分配权限
+      path: '/role',
+      name: 'Role',
+      component: Role
     },
     {
       //个人中心------工单指派

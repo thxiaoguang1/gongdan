@@ -71,6 +71,7 @@ const data2=[{
 }];
   // 我要报修----已报修
   const yibaoxiao=[{
+    juese:'管理员',
     name:'张三',
     danwei:'国家市场监督管理局',
     chushi:'开发一处',

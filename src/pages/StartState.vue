@@ -3,7 +3,7 @@
   <div class="repadirLeft">
      <van-nav-bar
       fixed
-      title='指派维修人员'
+      title='维修处理'
       left-arrow
       @click-left="onClickLeft"
       />
