@@ -8,7 +8,7 @@
       @click-left="onClickLeft"
       />
     <van-cell-group>
-      <van-cell title="维修单号" :value="danhao" size="large" />
+      <van-cell title="维修单号" :value="danhao" size="large" style="margin-top:45px"/>
       <van-cell title="维修对象" :value="duixiang" size="large" />
       <van-cell title="地址" :value="dizhi" size="large" />
       <van-cell title="报修时间" :value="time" size="large" />
