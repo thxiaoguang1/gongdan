@@ -53,6 +53,9 @@ export default {
       if(this.$route.params.word1==='填写成功'){
         this.$router.replace('/essential')
       }
+      if(this.$route.params.word1==='成功添加角色'){
+        this.$router.replace('/role')
+      }
     },
     onClickLeft(){
       this.$router.replace('/evaluate')

@@ -3,7 +3,7 @@
   <div class="repadirLeft">
     <van-nav-bar 
       fixed
-      title="选择角色"
+      title="添加角色"
     />
     <van-cell-group style="margin-top:45px">
       <van-field
@@ -149,7 +149,7 @@ export default {
           path:'/success',
           name:'Success',
           params:{
-            word1:'填写成功',word2:'返回查看个人信息'
+            word1:'成功添加角色',word2:'返回查看个人信息'
           }
         })
       }else {
