@@ -24,7 +24,7 @@
         <p>维修单号:{{item.danhao}}</p>
         <p>维修对象:{{item.duixiang}}</p>
         <p>报修人:{{item.name}}</p>
-        <p>联系电话:{{item.phone}}</p>
+        <p>座机:{{item.phone}}</p>
         <p>地址:{{item.quyu}}{{item.bangonshi}}</p>
         <p>故障描述:{{item.miaoshu}}</p>
         <!-- <p>故障描述:{{item.miaoshu}}</p> -->

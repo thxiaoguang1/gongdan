@@ -50,10 +50,12 @@ export default {
     }
   },
   methods: {
-    onConfirm(value){
+    onConfirm(value,index){
+      console.log(value,index)
       this.showPicker = false;
       this.$emit('getValue',value)
-    }
+      this.$emit('getIndex',index)
+    },
   },
   created() {
   },

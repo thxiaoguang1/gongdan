@@ -20,6 +20,7 @@ import StartAssign from '@/pages/StartAssign'
 import StartState from '@/pages/StartState'
 import statePlantJump from '@/pages/statePlant_jump'
 import Role from '@/pages/role'
+import AddRole from '@/pages/AddRole'
 Vue.use(Router)
 
 export default new Router({
@@ -58,7 +59,13 @@ export default new Router({
       component: Essential
     },
     {
-      //个人中心-----分配权限
+      //个人中心-----分配权限列表
+      path: '/addRole',
+      name: 'AddRole',
+      component: AddRole
+    },
+    {
+      //个人中心-----分配权限详情
       path: '/role',
       name: 'Role',
       component: Role

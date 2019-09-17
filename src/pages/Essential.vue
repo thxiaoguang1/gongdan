@@ -14,9 +14,9 @@
         required
         input-align='right'
       />
-      <dropdown :placeholder="placeholder1" :label='label1' :required='required' @getValue='getdanwei' :value='danwei' :inputAlign='inputAlign' :columns='columns1'></dropdown>
-      <dropdown :placeholder="placeholder2" :label='label2' :required='required'  @getValue='getchushi' :value='chushi' :inputAlign='inputAlign' :columns='columns2'></dropdown>
-       <dropdown :placeholder="placeholder3" :label='label3' :required='required' @getValue='getquyu' :value='quyu' :inputAlign='inputAlign' :columns='columns3'></dropdown>
+      <dropdown :placeholder="placeholder1" :label='label1' :required='required' @getValue='getdanwei' @getIndex='getdanweiIndex' :value='danwei' :inputAlign='inputAlign' :columns='columns1'></dropdown>
+      <dropdown :placeholder="placeholder2" :label='label2' :required='required'  @getValue='getchushi' :value='chushi' @getIndex='getchushiIndex' :inputAlign='inputAlign' :columns='columns2'></dropdown>
+      <dropdown :placeholder="placeholder3" :label='label3' :required='required' @getValue='getquyu' :value='quyu' @getIndex='getquyuIndex' :inputAlign='inputAlign' :columns='columns3'></dropdown>
       <van-field
         label="办公室"
         placeholder="请输入办公区"
@@ -50,6 +50,7 @@
 import Vue from 'vue'
 import Axios from 'axios'
 import Url from '@/api/index'
+import Qs from 'qs'
 import Dropdown from '../components/Dropdown'
 import { Field, CellGroup, Cell, RadioGroup, Radio, Collapse, CollapseItem, DatetimePicker, Popup, Button, Toast, NavBar } from 'vant';
 export default {
@@ -97,7 +98,7 @@ export default {
       label1:'单位',
       label2:'处室',
       label3:'所属区域',
-      columns1: ['国家市场监督管理局','卫生局'],
+      columns1: [],
       columns2: ['维修一处','开发一处'],
       columns3: ['三里河','马甸'],
       required:true,
@@ -118,6 +119,18 @@ export default {
     getdanwei(name){
       this.danwei=name // 获取子页面的value
     },
+    getdanweiIndex(index){
+      console.log(index)
+      // this.danwei=name // 获取子页面的value
+    },
+    getchushiIndex(index){
+      console.log(index)
+      // this.danwei=name // 获取子页面的value
+    },
+    getquyuIndex(index){
+      console.log(index)
+      // this.danwei=name // 获取子页面的value
+    },
     getchushi(name){
       this.chushi=name // 获取子页面的value
     },
@@ -125,6 +138,7 @@ export default {
       this.quyu=name // 获取子页面的value
     },
     gotolink(){
+      let data=[];
       //  console.log(this.id,this.valueTime)
       if(this.id&&this.danwei&&this.chushi&&this.bangongju&&this.quyu&&this.zuoji){
         // Axios.get('/api/yibaoxiao',{
@@ -132,38 +146,59 @@ export default {
         //     id:1,
         //   }
         // })
-        this.$router.push({
-          path:'/success',
-          name:'Success',
-          params:{
-            word1:'填写成功',word2:'返回查看个人信息'
-          }
-        })
+        data.realName=this.id;
+        data.unit=this.danwei;
+        data.officeRoom=this.chushi;
+        data.area=this.quyu;
+        data.office=this.bangongju;
+        data.tel=this.zuoji;
+        data.phone=this.phone?this.phone:'';
+        console.log(data)
+        Axios.post(Url+'/gongDansaveUser',Qs.stringify(data)).then((res)=>{
+          console.log(res)
+        }) 
+        // this.$router.push({
+        //   path:'/success',
+        //   name:'Success',
+        //   params:{
+        //     word1:'填写成功',word2:'返回查看个人信息'
+        //   }
+        // })
       }else {
         Toast('请完善基本信息');
       }
      
-    }
+    },
+   
   },
   created() {
-    Axios.post('/api/yibaoxiao').then((res)=>{
-      console.log(res)
-      this.id=res.data[0].name;
-      this.danwei=res.data[0].danwei;
-      this.chushi=res.data[0].chushi;
-      this.bangongju=res.data[0].bangongju;
-      this.quyu=res.data[0].address;
-      this.phone=res.data[0].phone;
-      this.zuoji=res.data[0].zuoji;
-    }).catch((err)=>{
-
-    })
-    // 写法例如
-    Axios.get(Url+'/todos').then((res)=>{
-      console.log(res)
-    }).catch((res)=>{
-
-    })
+    let data1={'code':'DW'};
+    let data2={'code':'CS'};
+    let data3={'code':'SSQY'};
+    Axios.post(Url+'/gongDan/getDataByCode',Qs.stringify(data1)).then((res)=>{
+      const details=res.data.details;
+      let code=[];
+      details.forEach(element => {
+        code.push(element.code)
+        this.columns1=code
+      });
+    }) 
+    Axios.post(Url+'/gongDan/getDataByCode',Qs.stringify(data2)).then((res)=>{
+      const details=res.data.details;
+      let code=[];
+      details.forEach(element => {
+        code.push(element.code)
+        this.columns2=code
+      });
+    }) 
+    Axios.post(Url+'/gongDan/getDataByCode',Qs.stringify(data3)).then((res)=>{
+      const details=res.data.details;
+      let code=[];
+      details.forEach(element => {
+        code.push(element.code)
+        this.columns3=code
+      });
+    }) 
   },
 }
 </script>
