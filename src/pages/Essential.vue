@@ -95,6 +95,9 @@ export default {
       placeholder1:'请选择单位',
       placeholder2:'请选择处室',
       placeholder3:'请选择所属区域',
+      danweiIndex:'',
+      chushiIndex:'',
+      quyuIndex:'',
       label1:'单位',
       label2:'处室',
       label3:'所属区域',
@@ -121,15 +124,15 @@ export default {
     },
     getdanweiIndex(index){
       console.log(index)
-      // this.danwei=name // 获取子页面的value
+      this.danweiIndex=index 
     },
     getchushiIndex(index){
       console.log(index)
-      // this.danwei=name // 获取子页面的value
+      this.chushiIndex=index 
     },
     getquyuIndex(index){
       console.log(index)
-      // this.danwei=name // 获取子页面的value
+      this.quyuIndex=index 
     },
     getchushi(name){
       this.chushi=name // 获取子页面的value
@@ -139,6 +142,7 @@ export default {
     },
     gotolink(){
       let data=[];
+      //  console.log(this.danweiIndex,this.chushiIndex,this.quyuIndex,)
       //  console.log(this.id,this.valueTime)
       if(this.id&&this.danwei&&this.chushi&&this.bangongju&&this.quyu&&this.zuoji){
         // Axios.get('/api/yibaoxiao',{
@@ -146,10 +150,11 @@ export default {
         //     id:1,
         //   }
         // })
+      
         data.realName=this.id;
-        data.unit=this.danwei;
-        data.officeRoom=this.chushi;
-        data.area=this.quyu;
+        data.unit=this.danweiIndex;
+        data.officeRoom=this.chushiIndex;
+        data.area=this.quyuIndex;
         data.office=this.bangongju;
         data.tel=this.zuoji;
         data.phone=this.phone?this.phone:'';
