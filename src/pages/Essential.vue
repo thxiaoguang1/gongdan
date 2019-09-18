@@ -159,7 +159,7 @@ export default {
         data.tel=this.zuoji;
         data.phone=this.phone?this.phone:'';
         console.log(data)
-        Axios.post(Url+'/gongDansaveUser',Qs.stringify(data)).then((res)=>{
+        Axios.post(Url+'/gdSysUsersaveUser',Qs.stringify(data)).then((res)=>{
           console.log(res)
         }) 
         // this.$router.push({
@@ -180,7 +180,7 @@ export default {
     let data1={'code':'DW'};
     let data2={'code':'CS'};
     let data3={'code':'SSQY'};
-    Axios.post(Url+'/gongDan/getDataByCode',Qs.stringify(data1)).then((res)=>{
+    Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data1)).then((res)=>{
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
@@ -188,7 +188,7 @@ export default {
         this.columns1=code
       });
     }) 
-    Axios.post(Url+'/gongDan/getDataByCode',Qs.stringify(data2)).then((res)=>{
+    Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data2)).then((res)=>{
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
@@ -196,7 +196,7 @@ export default {
         this.columns2=code
       });
     }) 
-    Axios.post(Url+'/gongDan/getDataByCode',Qs.stringify(data3)).then((res)=>{
+    Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data3)).then((res)=>{
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
