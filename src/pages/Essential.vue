@@ -139,14 +139,7 @@ export default {
     },
     gotolink(){
       let data=[];
-      //  console.log(this.danweiIndex,this.chushiIndex,this.quyuIndex,)
-      //  console.log(this.id,this.valueTime)
       if(this.id&&this.danwei&&this.chushi&&this.bangongju&&this.quyu&&this.zuoji){
-        // Axios.get('/api/yibaoxiao',{
-        //   params:{
-        //     id:1,
-        //   }
-        // })
       
         data.realName=this.id;
         data.unit=this.danweiIndex;

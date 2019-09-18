@@ -8,12 +8,12 @@
     <div class="evaluate">
       <van-panel v-for='(item,index) in items' :key='index'>
          <div class="evaluate_list position">
-           <p>姓名:{{item.name}}</p>
-           <p>单位:{{item.danwei}}</p>
-           <p>处室:{{item.chushi}}</p>
-           <p>所属区域:{{item.quyu}}</p>
-           <p>办公室:{{item.bangongshi}}</p>
-           <p>座机:{{item.phone}}</p>
+           <p>姓名:{{item.realName}}</p>
+           <p>单位:{{item.unit}}</p>
+           <p>处室:{{item.officeRoom}}</p>
+           <p>所属区域:{{item.area}}</p>
+           <p>办公室:{{item.office}}</p>
+           <p>座机:{{item.tel}}</p>
            <p>移动电话:{{item.phone}}</p>
          </div>
          <van-button type="primary" size="large" class='button' v-if='!newButton' @click='gotolink(item)'>添加角色</van-button>
@@ -26,6 +26,9 @@
 
 <script>
 import Vue from 'vue'
+import Axios from 'axios'
+import Url from '@/api/index'
+import Qs from 'qs'
 import { NavBar, Field, CellGroup, Cell, Toast,RadioGroup, Radio, Collapse, CollapseItem, DatetimePicker, Popup, Button, Card, Panel } from 'vant';
 
 
@@ -51,12 +54,7 @@ export default {
   data () {
     return {
       newButton:'',
-      items:[
-        {'value':1,'xuhao':4,'name':'张三','bangonshi':'c204','miaoshu':'电脑蓝屏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','phone':'123123122131','duixiang':'电脑','time':'2019-09-18 13:28','state':'完成','danhao':'c123123123'},
-        {'value':2,'xuhao':3,'name':'张三','bangonshi':'c201','miaoshu':'显示屏问题','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','phone':'123123122131','duixiang':'电脑','time':'2019-09-18 13:28','state':'完成','danhao':'c223123123'},
-         {'value':3,'xuhao':2,'name':'张三','bangonshi':'c202','miaoshu':'主机损坏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','phone':'123123122131','duixiang':'电脑','time':'2019-09-18 13:28','state':'完成','danhao':'c323123123'},
-          {'value':4,'xuhao':1,'name':'张三','bangonshi':'c203','miaoshu':'主机损坏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','phone':'123123122131','duixiang':'电脑','time':'2019-09-18 13:28','state':'完成','danhao':'c423123123'},
-      ]
+      items:[]
       // msg: 'Welcome to Your Vue.js App'
     }
   },
@@ -64,14 +62,53 @@ export default {
     onClick(name, title) {
       this.newButton=name;
     },
-    gotolink(){
+    gotolink(item){
       this.$router.push({
         path:'/role',
         name:'Role',
-        params:{  }
+        params:{ params:item }
       })
     }
-  }
+  },
+  created() {
+     Axios.get(Url+'/gdSysUser/getUserList').then((res)=>{
+      const data=res.data
+        data.forEach((res)=>{
+          let data=res
+          let data1={'code':'DW','value':data.unit};
+          let data2={'code':'CS','value':data.officeRoom};
+          let data3={'code':'SSQY','value':data.area};
+          Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal  ',Qs.stringify(data1)).then((res)=>{
+            data.unit=(res.data)
+          })
+          Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal  ',Qs.stringify(data2)).then((res)=>{
+            data.officeRoom=(res.data)
+          })
+          Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal  ',Qs.stringify(data3)).then((res)=>{
+            data.area=(res.data)
+          })
+        
+       })
+        // data.realName=this.id;
+        // data.unit=this.danweiIndex;
+        // data.officeRoom=this.chushiIndex;
+        // data.area=this.quyuIndex;
+        // data.office=this.bangongju;
+        // data.tel=this.zuoji;
+        // data.phone=this.phone?this.phone:'';
+       this.items=res.data
+          // if(res.data.result==='success'){
+          //   this.$router.push({
+          //     path:'/success',
+          //     name:'Success',
+          //     params:{
+          //       word1:'填写成功',word2:'返回查看个人信息'
+          //     }
+          //   })
+          // }
+        }) 
+  },
+
 }
 </script>
 

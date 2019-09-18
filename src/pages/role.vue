@@ -75,6 +75,8 @@
 <script>
 import Vue from 'vue'
 import Axios from 'axios'
+import Url from '@/api/index'
+import Qs from 'qs'
 import Dropdown from '../components/Dropdown'
 import { Field, CellGroup, Cell, RadioGroup, Radio, Collapse, CollapseItem, DatetimePicker, Popup, Button, Toast, NavBar } from 'vant';
 export default {
@@ -97,6 +99,7 @@ export default {
   data () {
     return {
       id:'',
+      roleId:'',
       juese:'',
       danwei:'',
       chushi:'',
@@ -118,7 +121,7 @@ export default {
       currentDate: new Date(),
       placeholder:'请选择角色',
       label:'划分角色',
-      columns: ['普通用户','维修人员','厂家维修人员','管理员'],
+      columns: [],
       required:true,
       inputAlign:'right',
       // msg: 'Welcome to Your Vue.js App'
@@ -135,23 +138,43 @@ export default {
       this.startTimePop = false;
     },
     getValue(name){
-      this.juese=name // 获取子页面的value
+      this.juese=name
+        Axios.post(Url+'/gdRoles/getRoles').then((res)=>{
+          const data=res.data;
+          data.forEach((res)=>{
+            if(this.juese===res.name){
+             this.roleId=res.id
+            }
+          })
+        }).catch((err)=>{
+
+        })
     },
     gotolink(){
-      //  console.log(this.id,this.valueTime)
-      if(this.id&&this.danwei&&this.chushi&&this.bangongju&&this.quyu&&this.zuoji){
-        // Axios.get('/api/yibaoxiao',{
+       console.log(this.roleId)
+       let data={'roles[0].id':this.roleId}
+      if(this.juese){
+        Axios.post(Url+'/gdSysUser/editUser',Qs.stringify(data)).then((res)=>{
+          if(res.data==='success'){
+            this.$router.push({
+              path:'/success',
+              name:'Success',
+              params:{
+                word1:'成功添加角色',word2:'返回'
+              }
+            })
+          }
+       
+        }).catch((err)=>{
+
+        })
+        // this.$router.push({
+        //   path:'/success',
+        //   name:'Success',
         //   params:{
-        //     id:1,
+        //     word1:'成功添加角色',word2:'返回查看个人信息'
         //   }
         // })
-        this.$router.push({
-          path:'/success',
-          name:'Success',
-          params:{
-            word1:'成功添加角色',word2:'返回查看个人信息'
-          }
-        })
       }else {
         Toast('请完善基本信息');
       }
@@ -159,16 +182,27 @@ export default {
     }
   },
   created() {
-    Axios.post('/api/yibaoxiao').then((res)=>{
-      console.log(res)
-      this.id=res.data[0].name;
-      this.danwei=res.data[0].danwei;
-      this.chushi=res.data[0].chushi;
-      this.bangongju=res.data[0].bangongju;
-      this.quyu=res.data[0].address;
-      this.phone=res.data[0].phone;
-      this.zuoji=res.data[0].zuoji;
-      this.juese=res.data[0].juese;
+    const data=this.$route.params.params;
+      this.id= data.realName;
+      this.danwei=data.unit;
+      this.chushi=data.officeRoom;
+      this.quyu=data.area;
+      this.bangongju=data.office;
+      this.zuoji=data.tel;
+      this.phone=data.phone?data.phone:'';
+    Axios.post(Url+'/gdRoles/getRoles').then((res)=>{
+      const data=res.data;
+      data.forEach((res)=>{
+          this.columns.push(res.name)
+      })
+      // this.id=res.data[0].name;
+      // this.danwei=res.data[0].danwei;
+      // this.chushi=res.data[0].chushi;
+      // this.bangongju=res.data[0].bangongju;
+      // this.quyu=res.data[0].address;
+      // this.phone=res.data[0].phone;
+      // this.zuoji=res.data[0].zuoji;
+      // this.juese=res.data[0].juese;
     }).catch((err)=>{
 
     })
