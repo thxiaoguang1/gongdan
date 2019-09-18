@@ -138,19 +138,22 @@ export default {
       this.quyu=name // 获取子页面的value
     },
     gotolink(){
-      let data=[];
+      let data={};
       if(this.id&&this.danwei&&this.chushi&&this.bangongju&&this.quyu&&this.zuoji){
       
         data.realName=this.id;
+        data.danwei=this.id;
         data.unit=this.danweiIndex;
+        data.chushi=this.chushi;
         data.officeRoom=this.chushiIndex;
+        data.quyu=this.quyu;
         data.area=this.quyuIndex;
         data.office=this.bangongju;
         data.tel=this.zuoji;
         data.phone=this.phone?this.phone:'';
-        console.log(data)
         Axios.post(Url+'/gdSysUser/saveUser',Qs.stringify(data)).then((res)=>{
           if(res.data.result==='success'){
+            localStorage.setItem('temp',JSON.stringify(data))
             this.$router.push({
               path:'/success',
               name:'Success',

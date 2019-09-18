@@ -235,22 +235,14 @@ export default {
     }
   },
   created() {
-    Axios.post('/api/yibaoxiao').then((res)=>{
-      console.log(res)
-      this.id=res.data[0].name;
-      this.danwei=res.data[0].danwei;
-      this.chushi=res.data[0].chushi;
-      this.phone=res.data[0].phone;
-      this.bangongju=res.data[0].bangongju;
-      this.address=res.data[0].address;
-      this.zuoji=res.data[0].zuoji;
-      this.danhao=res.data[0].danhao;
-      // this.duixiang=res.data[0].duixiang;
-      // this.miaoshu=res.data[0].miaoshu;
-      this.time=res.data[0].time;
-    }).catch((err)=>{
-
-    })
+    let data=JSON.parse(localStorage.getItem('temp'))
+    this.id=data.realName;
+    this.danwei=data.danwei;
+    this.chushi=data.chushi;
+    this.phone=data.phone;
+    this.bangongju=data.office;
+    this.address=data.quyu;
+    this.zuoji=data.tel;
   },
 }
 </script>
