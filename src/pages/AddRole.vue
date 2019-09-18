@@ -78,13 +78,13 @@ export default {
           let data1={'code':'DW','value':data.unit};
           let data2={'code':'CS','value':data.officeRoom};
           let data3={'code':'SSQY','value':data.area};
-          Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal  ',Qs.stringify(data1)).then((res)=>{
+          Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal',Qs.stringify(data1)).then((res)=>{
             data.unit=(res.data)
           })
-          Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal  ',Qs.stringify(data2)).then((res)=>{
+          Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal',Qs.stringify(data2)).then((res)=>{
             data.officeRoom=(res.data)
           })
-          Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal  ',Qs.stringify(data3)).then((res)=>{
+          Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal',Qs.stringify(data3)).then((res)=>{
             data.area=(res.data)
           })
         

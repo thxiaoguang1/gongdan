@@ -99,7 +99,9 @@ export default {
   data () {
     return {
       id:'',
+      userId:'',
       roleId:'',
+      pId:'',
       juese:'',
       danwei:'',
       chushi:'',
@@ -143,7 +145,8 @@ export default {
           const data=res.data;
           data.forEach((res)=>{
             if(this.juese===res.name){
-             this.roleId=res.id
+              this.roleId=res.id
+              this.pId=res.pId
             }
           })
         }).catch((err)=>{
@@ -152,7 +155,7 @@ export default {
     },
     gotolink(){
        console.log(this.roleId)
-       let data={'roles[0].id':this.roleId}
+       let data={'roles[0].id':this.roleId,'id':this.userId}
       if(this.juese){
         Axios.post(Url+'/gdSysUser/editUser',Qs.stringify(data)).then((res)=>{
           if(res.data==='success'){
@@ -183,6 +186,7 @@ export default {
   },
   created() {
     const data=this.$route.params.params;
+    console.log(data)
       this.id= data.realName;
       this.danwei=data.unit;
       this.chushi=data.officeRoom;
@@ -190,6 +194,7 @@ export default {
       this.bangongju=data.office;
       this.zuoji=data.tel;
       this.phone=data.phone?data.phone:'';
+      this.userId=data.id;
     Axios.post(Url+'/gdRoles/getRoles').then((res)=>{
       const data=res.data;
       data.forEach((res)=>{
