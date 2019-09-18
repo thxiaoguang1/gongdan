@@ -102,8 +102,8 @@ export default {
       label2:'处室',
       label3:'所属区域',
       columns1: [],
-      columns2: ['维修一处','开发一处'],
-      columns3: ['三里河','马甸'],
+      columns2: [],
+      columns3: [],
       required:true,
       inputAlign:'right',
       // msg: 'Welcome to Your Vue.js App'
@@ -157,15 +157,17 @@ export default {
         data.phone=this.phone?this.phone:'';
         console.log(data)
         Axios.post(Url+'/gdSysUser/saveUser',Qs.stringify(data)).then((res)=>{
-          console.log(res)
+          if(res.data.result==='success'){
+            this.$router.push({
+              path:'/success',
+              name:'Success',
+              params:{
+                word1:'填写成功',word2:'返回查看个人信息'
+              }
+            })
+          }
         }) 
-        // this.$router.push({
-        //   path:'/success',
-        //   name:'Success',
-        //   params:{
-        //     word1:'填写成功',word2:'返回查看个人信息'
-        //   }
-        // })
+        
       }else {
         Toast('请完善基本信息');
       }
@@ -174,6 +176,26 @@ export default {
    
   },
   created() {
+    let data={'userId':3};
+    Axios.post(Url+'/gdSysUser/getUser',Qs.stringify(data)).then((res)=>{
+      let data=res.data
+      let data1={'code':'DW','value':data.unit};
+      let data2={'code':'CS','value':data.officeRoom};
+      let data3={'code':'SSQY','value':data.area};
+      Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal  ',Qs.stringify(data1)).then((res)=>{
+        this.danwei=(res.data)
+      })
+      Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal  ',Qs.stringify(data2)).then((res)=>{
+        this.chushi=(res.data)
+      })
+      Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal  ',Qs.stringify(data3)).then((res)=>{
+        this.quyu=(res.data)
+      })
+      this.id=data.realName
+      this.bangongju=data.office
+      this.zuoji=data.tel
+      this.phone=data.phone
+    }) 
     let data1={'code':'DW'};
     let data2={'code':'CS'};
     let data3={'code':'SSQY'};
