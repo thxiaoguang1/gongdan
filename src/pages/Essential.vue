@@ -119,9 +119,6 @@ export default {
       this.valueTime=resDate
       this.startTimePop = false;
     },
-    getdanwei(name){
-      this.danwei=name // 获取子页面的value
-    },
     getdanweiIndex(index){
       this.danweiIndex=Number(index)+1
     },
@@ -130,6 +127,9 @@ export default {
     },
     getquyuIndex(index){
       this.quyuIndex=Number(index)+1 
+    },
+    getdanwei(name){
+      this.danwei=name // 获取子页面的value
     },
     getchushi(name){
       this.chushi=name // 获取子页面的value
@@ -142,7 +142,7 @@ export default {
       if(this.id&&this.danwei&&this.chushi&&this.bangongju&&this.quyu&&this.zuoji){
       
         data.realName=this.id;
-        data.danwei=this.id;
+        data.danwei=this.danwei;
         data.unit=this.danweiIndex;
         data.chushi=this.chushi;
         data.officeRoom=this.chushiIndex;
@@ -172,26 +172,37 @@ export default {
    
   },
   created() {
-    let data={'userId':3};
-    Axios.post(Url+'/gdSysUser/getUser',Qs.stringify(data)).then((res)=>{
-      let data=res.data
-      let data1={'code':'DW','value':data.unit};
-      let data2={'code':'CS','value':data.officeRoom};
-      let data3={'code':'SSQY','value':data.area};
-      Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal  ',Qs.stringify(data1)).then((res)=>{
-        this.danwei=(res.data)
-      })
-      Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal  ',Qs.stringify(data2)).then((res)=>{
-        this.chushi=(res.data)
-      })
-      Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal  ',Qs.stringify(data3)).then((res)=>{
-        this.quyu=(res.data)
-      })
-      this.id=data.realName
-      this.bangongju=data.office
-      this.zuoji=data.tel
-      this.phone=data.phone
-    }) 
+    let getData=JSON.parse(localStorage.getItem('temp'))
+  
+    if(getData){
+      this.id=getData.realName;
+      this.danwei=getData.danwei;
+      this.chushi=getData.chushi;
+      this.phone=getData.phone;
+      this.bangongju=getData.office;
+      this.quyu=getData.quyu;
+      this.zuoji=getData.tel;
+    }
+    // let data={'userId':3};
+    // Axios.post(Url+'/gdSysUser/getUser',Qs.stringify(data)).then((res)=>{
+    //   let data=res.data
+    //   let data1={'code':'DW','value':data.unit};
+    //   let data2={'code':'CS','value':data.officeRoom};
+    //   let data3={'code':'SSQY','value':data.area};
+    //   Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal',Qs.stringify(data1)).then((res)=>{
+    //     this.danwei=(res.data)
+    //   })
+    //   Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal',Qs.stringify(data2)).then((res)=>{
+    //     this.chushi=(res.data)
+    //   })
+    //   Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal',Qs.stringify(data3)).then((res)=>{
+    //     this.quyu=(res.data)
+    //   })
+    //   this.id=data.realName
+    //   this.bangongju=data.office
+    //   this.zuoji=data.tel
+    //   this.phone=data.phone
+    // }) 
     let data1={'code':'DW'};
     let data2={'code':'CS'};
     let data3={'code':'SSQY'};

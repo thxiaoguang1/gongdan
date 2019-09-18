@@ -8,38 +8,18 @@
       clearable
       v-model="id"
       input-align='right'
+      required
       />
-      
-      <van-field
-      v-if='!newButton'
-      label="单位"
-      clearable
-      v-model="danwei"
-      input-align='right'
-      />
-      
-      <van-field
-      v-if='!newButton'
-      label="处室"
-      clearable
-      v-model="chushi"
-      input-align='right'
-      />
-     
-      <van-field
-      v-if='!newButton'
-      label="所属区域"
-      clearable
-      v-model="address"
-      input-align='right'
-      />
-    
+      <dropdown :placeholder="placeholder1" :label='label1' :required='required' @getValue='getdanwei' @getIndex='getdanweiIndex' :value='danwei' :inputAlign='inputAlign' :columns='columns1'></dropdown>
+      <dropdown :placeholder="placeholder2" :label='label2' :required='required'  @getValue='getchushi' :value='chushi' @getIndex='getchushiIndex' :inputAlign='inputAlign' :columns='columns2'></dropdown>
+      <dropdown :placeholder="placeholder3" :label='label3' :required='required' @getValue='getquyu' :value='quyu' @getIndex='getquyuIndex' :inputAlign='inputAlign' :columns='columns3'></dropdown>
       <van-field
       v-if='!newButton'
       label="办公室"
       clearable
       v-model="bangongju"
       input-align='right'
+      required
       />
       
       <van-field
@@ -48,6 +28,7 @@
       clearable
       v-model="zuoji"
       input-align='right'
+      required
       />
         
       <van-field
@@ -57,72 +38,9 @@
       v-model="phone"
       input-align='right'
       />
-      <dropdown :placeholder="placeholder3" :label='label3' :columns='columns3' @getValue='getValue3' :inputAlign='inputAlign' class="peple" :required='required' :value='valueMiaoshu'></dropdown>
-       <dropdown :placeholder="placeholder4" :label='label4' :columns='columns4' @getValue='getValue4' :inputAlign='inputAlign' class="peple" :required='required' :value='valueDuixiang'></dropdown>
-   
-      <!-- <van-cell title="维修单号" :value=danhao size="large" /> -->
-      <!-- <van-collapse v-model="activeNames" v-if='!newButton'>
-        <van-collapse-item title="维修对象" name="1">
-          <van-radio-group v-model="radio">
-            <van-cell title="电脑" clickable @click="radio = '1'">
-              <van-radio slot="right-icon" name="1" />
-            </van-cell>
-            <van-cell title="服务器" clickable @click="radio = '2'">
-              <van-radio slot="right-icon" name="2" />
-            </van-cell>
-            <van-cell title="其他" clickable @click="radio = '3'">
-              <van-radio slot="right-icon" name="3" />
-            </van-cell>
-          </van-radio-group>
-        </van-collapse-item>
-      </van-collapse> -->
-      <!-- <van-collapse v-model="activeNames" v-if='newButton'>
-        <van-collapse-item title="维修对象" name="1">
-          <van-radio-group v-model="radio" disabled>
-            <van-cell title="电脑" clickable @click="radio = '1'">
-              <van-radio slot="right-icon" name="1" />
-            </van-cell>
-             <van-cell title="服务器" clickable @click="radio = '2'">
-              <van-radio slot="right-icon" name="2" />
-            </van-cell>
-            <van-cell title="其他" clickable @click="radio = '3'">
-              <van-radio slot="right-icon" name="3" />
-            </van-cell>
-          </van-radio-group>
-        </van-collapse-item>
-      </van-collapse> -->
-      <!-- <van-field 
-        v-if='!newButton'
-        v-model='message1'
-        label="故障描述"
-        type="textarea"
-        rows="1" 
-        autosize
-        placeholder="请输入故障描述"
-        input-align='right'
-        >
-      </van-field>        
-      </van-field> -->
+      <dropdown :placeholder="placeholder4" :label='label4' :columns='columns4' @getValue='getValue4' :inputAlign='inputAlign' class="peple" :required='required' :value='valueMiaoshu'></dropdown>
+       <dropdown :placeholder="placeholder5" :label='label5' :columns='columns5' @getValue='getValue5' :inputAlign='inputAlign' class="peple" :required='required' :value='valueDuixiang'></dropdown>
       <van-cell title="故障描述" :value=miaoshu size="large" v-if='newButton' class="miaoshu"/>
-      <!-- <van-field v-if='!newButton'
-        label="报修时间"
-        clickable
-        readonly="readonly"
-        :value="valueTime"
-        input-align='right'
-        placeholder="选择提交时间"
-        @click="startTimePop = true && !newButton"
-      />
-      <van-popup v-model="startTimePop" position="bottom" v-if='!newButton'>
-        <van-datetime-picker
-          type="date"
-          :min-date="minDate"
-          :max-date="maxDate"
-          @cancel="startTimePop = false"
-          @confirm="onConfirm"
-        />
-      </van-popup>
-       <van-cell title="报修时间" :value=time size="large" v-if='newButton'/> -->
     </van-cell-group>
      
     <van-button type="primary" size="large" class='button' v-if='!newButton' @click='gotolink'>提交工单</van-button>
@@ -132,6 +50,8 @@
 <script>
 import Vue from 'vue'
 import Axios from 'axios'
+import Url from '@/api/index'
+import Qs from 'qs'
 import Dropdown from '../components/Dropdown'
 import { Field, CellGroup, Cell, RadioGroup, Radio, Collapse, CollapseItem, DatetimePicker, Popup, Button, Toast, Picker } from 'vant';
 export default {
@@ -154,12 +74,25 @@ export default {
   name: 'RepairLeft',
   data () {
     return {
-      placeholder3:'请选择故障描述',
-      label3:'故障描述',
-      columns3: ['电脑坏了', '蓝屏了', '服务器异常'],
-        placeholder4:'请选择维修对象',
-      label4:'维修对象',
-      columns4: ['电脑', '服务器', '主机','其他'],
+      placeholder1:'请选择单位',
+      placeholder2:'请选择处室',
+      placeholder3:'请选择所属区域',
+      danweiIndex:'',
+      chushiIndex:'',
+      quyuIndex:'',
+      label1:'单位',
+      label2:'处室',
+      label3:'所属区域',
+      columns1: [],
+      columns2: [],
+      columns3: [],
+      quyu:'',
+      placeholder4:'请选择故障描述',
+      label4:'故障描述',
+      columns4: ['电脑坏了', '蓝屏了', '服务器异常'],
+        placeholder5:'请选择维修对象',
+      label5:'维修对象',
+      columns5: ['电脑', '服务器', '主机','其他'],
        inputAlign:'right',
        required:true,
       valueDuixiang:'',
@@ -168,7 +101,6 @@ export default {
       danwei:'',
       chushi:'',
       bangongju:'',
-      address:'',
       zuoji:'',
       phone:'',
       danhao:'',
@@ -197,11 +129,29 @@ export default {
     p(s) {
       return s < 10 ? '0' + s : s
     },
-    getValue3(value){
+    getdanweiIndex(index){
+      this.danweiIndex=Number(index)+1
+    },
+    getchushiIndex(index){
+      this.chushiIndex=Number(index)+1 
+    },
+    getquyuIndex(index){
+      this.quyuIndex=Number(index)+1 
+    },
+    getdanwei(name){
+      this.danwei=name // 获取子页面的value
+    },
+    getchushi(name){
+      this.chushi=name // 获取子页面的value
+    },
+    getquyu(name){
+      this.quyu=name // 获取子页面的value
+    },
+    getValue4(value){
       console.log(value)
       this.valueMiaoshu=value // 获取子页面的value
     },
-    getValue4(value){
+    getValue5(value){
       console.log(value)
       this.valueDuixiang=value // 获取子页面的value
     },
@@ -218,8 +168,23 @@ export default {
       this.showPicker2 = false;
     },
     gotolink(){
-      console.log(this.id,this.danwei,this.chushi,this.address,this.bangongju&&this.zuoji,this.value,this.value2)
-      if(this.id&&this.danwei&&this.chushi&&this.address&&this.bangongju&&this.zuoji&&this.valueMiaoshu&&this.valueDuixiang){
+      let data={};
+      console.log(this.id,this.danwei,this.chushi,this.quyu,this.bangongju&&this.zuoji,this.value,this.value2)
+      
+      if(this.id&&this.danwei&&this.chushi&&this.quyu&&this.bangongju&&this.zuoji&&this.valueMiaoshu&&this.valueDuixiang){
+        data.realName=this.id;
+        data.danwei=this.id;
+        data.unit=this.danweiIndex;
+        data.chushi=this.chushi;
+        data.officeRoom=this.chushiIndex;
+        data.quyu=this.quyu;
+        data.area=this.quyuIndex;
+        data.office=this.bangongju;
+        data.tel=this.zuoji;
+        data.phone=this.phone?this.phone:'';
+        Axios.post(Url+'/gdSysUser/getUser',Qs.stringify(data)).then((res)=>{
+
+        })
       //  replace('/success')
         this.$router.push({
           path:'/success',
@@ -241,8 +206,36 @@ export default {
     this.chushi=data.chushi;
     this.phone=data.phone;
     this.bangongju=data.office;
-    this.address=data.quyu;
+    this.quyu=data.quyu;
     this.zuoji=data.tel;
+    let data1={'code':'DW'};
+    let data2={'code':'CS'};
+    let data3={'code':'SSQY'};
+    console.log(data)
+    Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data1)).then((res)=>{
+      const details=res.data.details;
+      let code=[];
+      details.forEach(element => {
+        code.push(element.code)
+        this.columns1=code
+      });
+    }) 
+    Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data2)).then((res)=>{
+      const details=res.data.details;
+      let code=[];
+      details.forEach(element => {
+        code.push(element.code)
+        this.columns2=code
+      });
+    }) 
+    Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data3)).then((res)=>{
+      const details=res.data.details;
+      let code=[];
+      details.forEach(element => {
+        code.push(element.code)
+        this.columns3=code
+      });
+    }) 
   },
 }
 </script>
