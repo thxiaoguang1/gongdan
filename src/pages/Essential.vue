@@ -123,16 +123,13 @@ export default {
       this.danwei=name // 获取子页面的value
     },
     getdanweiIndex(index){
-      console.log(index)
-      this.danweiIndex=index 
+      this.danweiIndex=Number(index)+1
     },
     getchushiIndex(index){
-      console.log(index)
-      this.chushiIndex=index 
+      this.chushiIndex=Number(index)+1 
     },
     getquyuIndex(index){
-      console.log(index)
-      this.quyuIndex=index 
+      this.quyuIndex=Number(index)+1 
     },
     getchushi(name){
       this.chushi=name // 获取子页面的value
@@ -159,7 +156,7 @@ export default {
         data.tel=this.zuoji;
         data.phone=this.phone?this.phone:'';
         console.log(data)
-        Axios.post(Url+'/gdSysUsersaveUser',Qs.stringify(data)).then((res)=>{
+        Axios.post(Url+'/gdSysUser/saveUser',Qs.stringify(data)).then((res)=>{
           console.log(res)
         }) 
         // this.$router.push({
