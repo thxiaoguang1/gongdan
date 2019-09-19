@@ -38,8 +38,8 @@
       v-model="phone"
       input-align='right'
       />
-      <dropdown :placeholder="placeholder4" :label='label4' :columns='columns4' @getValue='getValue4' :inputAlign='inputAlign' class="peple" :required='required' :value='valueMiaoshu'></dropdown>
-       <dropdown :placeholder="placeholder5" :label='label5' :columns='columns5' @getValue='getValue5' :inputAlign='inputAlign' class="peple" :required='required' :value='valueDuixiang'></dropdown>
+      <dropdown :placeholder="placeholder4" :label='label4' :columns='columns4' @getValue='getValue4' :inputAlign='inputAlign' @getIndex='getmxIndex' class="peple" :required='required' :value='valueMiaoshu'></dropdown>
+       <dropdown :placeholder="placeholder5" :label='label5' :columns='columns5' @getValue='getValue5' :inputAlign='inputAlign' @getIndex='getdxIndex' class="peple" :required='required' :value='valueDuixiang'></dropdown>
       <van-cell title="故障描述" :value=miaoshu size="large" v-if='newButton' class="miaoshu"/>
     </van-cell-group>
      
@@ -121,7 +121,9 @@ export default {
       maxHour: 20,
       minDate: new Date(),
       maxDate: new Date(2019, 10, 1),
-      currentDate: new Date()
+      currentDate: new Date(),
+      mxIndex:'',
+      dxIndex:'',
       // msg: 'Welcome to Your Vue.js App'
     }
   },
@@ -137,6 +139,12 @@ export default {
     },
     getquyuIndex(index){
       this.quyuIndex=Number(index)+1 
+    },
+    getmxIndex(index){
+      this.mxIndex=Number(index)+1 
+    },
+    getdxIndex(index){
+      this.dxdex=Number(index)+1
     },
     getdanwei(name){
       this.danwei=name // 获取子页面的value
@@ -182,17 +190,22 @@ export default {
         data.office=this.bangongju;
         data.tel=this.zuoji;
         data.phone=this.phone?this.phone:'';
+        data.repairDesc=this.mxIndex;
+        data.repairObj=this.dxdex;
         Axios.post(Url+'/gdSysUser/getUser',Qs.stringify(data)).then((res)=>{
-
-        })
-      //  replace('/success')
-        this.$router.push({
-          path:'/success',
-          name:'Success',
-          params:{
-            word1:'提交成功',word2:'关闭'
+          console.log(res)
+          if(res.data.result==='success'){
+            this.$router.push({
+              path:'/success',
+              name:'Success',
+              params:{
+                word1:'提交成功',word2:'关闭'
+              } 
+            })
           }
         })
+      //  replace('/success')
+        
       }else {
         Toast('请完善内容');
       }
@@ -211,6 +224,8 @@ export default {
     let data1={'code':'DW'};
     let data2={'code':'CS'};
     let data3={'code':'SSQY'};
+    let data4={'code':'GZMS'};
+    let data5={'code':'WXDX'};
     console.log(data)
     Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data1)).then((res)=>{
       const details=res.data.details;
@@ -234,6 +249,22 @@ export default {
       details.forEach(element => {
         code.push(element.code)
         this.columns3=code
+      });
+    }) 
+     Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data4)).then((res)=>{
+      const details=res.data.details;
+      let code=[];
+      details.forEach(element => {
+        code.push(element.code)
+        this.columns4=code
+      });
+    }) 
+     Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data5)).then((res)=>{
+      const details=res.data.details;
+      let code=[];
+      details.forEach(element => {
+        code.push(element.code)
+        this.columns5=code
       });
     }) 
   },
