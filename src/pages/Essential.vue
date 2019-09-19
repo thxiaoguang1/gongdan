@@ -140,7 +140,6 @@ export default {
     gotolink(){
       let data={};
       if(this.id&&this.danwei&&this.chushi&&this.bangongju&&this.quyu&&this.zuoji){
-      
         data.realName=this.id;
         data.danwei=this.danwei;
         data.unit=this.danweiIndex;

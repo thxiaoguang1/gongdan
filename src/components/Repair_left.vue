@@ -9,6 +9,7 @@
       v-model="id"
       input-align='right'
       required
+      placeholder='请输入报修人'
       />
       <dropdown :placeholder="placeholder1" :label='label1' :required='required' @getValue='getdanwei' @getIndex='getdanweiIndex' :value='danwei' :inputAlign='inputAlign' :columns='columns1'></dropdown>
       <dropdown :placeholder="placeholder2" :label='label2' :required='required'  @getValue='getchushi' :value='chushi' @getIndex='getchushiIndex' :inputAlign='inputAlign' :columns='columns2'></dropdown>
@@ -20,6 +21,7 @@
       v-model="bangongju"
       input-align='right'
       required
+      placeholder='请输入办公室'
       />
       
       <van-field
@@ -29,6 +31,7 @@
       v-model="zuoji"
       input-align='right'
       required
+      placeholder='请输入座机'
       />
         
       <van-field
@@ -37,12 +40,13 @@
       clearable
       v-model="phone"
       input-align='right'
+      placeholder='请输入移动电话'
       />
       <dropdown :placeholder="placeholder4" :label='label4' :columns='columns4' @getValue='getValue4' :inputAlign='inputAlign' @getIndex='getmxIndex' class="peple" :required='required' :value='valueMiaoshu'></dropdown>
        <dropdown :placeholder="placeholder5" :label='label5' :columns='columns5' @getValue='getValue5' :inputAlign='inputAlign' @getIndex='getdxIndex' class="peple" :required='required' :value='valueDuixiang'></dropdown>
       <van-cell title="故障描述" :value=miaoshu size="large" v-if='newButton' class="miaoshu"/>
     </van-cell-group>
-     
+    
     <van-button type="primary" size="large" class='button' v-if='!newButton' @click='gotolink'>提交工单</van-button>
   </div>   
 </template>
@@ -50,7 +54,7 @@
 <script>
 import Vue from 'vue'
 import Axios from 'axios'
-import {getDataByCode} from '@/api/api'
+import {getDataByCode,getDataByCodeAndVal} from '@/api/api'
 import Qs from 'qs'
 import Dropdown from '../components/Dropdown'
 import { Field, CellGroup, Cell, RadioGroup, Radio, Collapse, CollapseItem, DatetimePicker, Popup, Button, Toast, Picker } from 'vant';
@@ -177,21 +181,91 @@ export default {
     },
     gotolink(){
       let data={};
-      console.log(this.id,this.danwei,this.chushi,this.quyu,this.bangongju&&this.zuoji,this.value,this.value2)
+      console.log(this.id,this.danwei,this.chushi,this.quyu,this.bangongju&&this.zuoji,this.valueMiaoshu,this.valueDuixiang)
       
       if(this.id&&this.danwei&&this.chushi&&this.quyu&&this.bangongju&&this.zuoji&&this.valueMiaoshu&&this.valueDuixiang){
+        let data1={'code':'DW'};
+        let data2={'code':'CS'};
+        let data3={'code':'SSQY'};
+        let data4={'code':'GZMS'};
+        let data5={'code':'WXDX'};
+        getDataByCode(data1).then((res)=>{
+          // console.log(res.data.details)
+            const details=res.data.details;
+            // let code=[];
+            details.forEach(res => {
+              if(this.danwei===res.code){
+                data.unit=res.value
+              }
+            });
+        })
+        getDataByCode(data2).then((res)=>{
+          // console.log(res.data.details)
+            const details=res.data.details;
+            // let code=[];
+            details.forEach(res => {
+              if(this.chushi===res.code){
+                data.officeRoom=res.value
+              }
+            });
+        })
+        getDataByCode(data3).then((res)=>{
+          // console.log(res.data.details)
+            const details=res.data.details;
+            // let code=[];
+            details.forEach(res => {
+              if(this.quyu===res.code){
+                data.area=res.value
+              }
+            });
+        })
+        getDataByCode(data4).then((res)=>{
+          // console.log(res.data.details)
+            const details=res.data.details;
+            // let code=[];
+            details.forEach(res => {
+              if(this.valueMiaoshu===res.code){
+                data.repairDesc=res.value
+              }
+            });
+        })
+        getDataByCode(data5).then((res)=>{
+          // console.log(res.data.details)
+            const details=res.data.details;
+            // let code=[];
+            details.forEach(res => {
+              if(this.valueDuixiang===res.code){
+                data.repairObj=res.value
+              }
+            });
+        })
+        // console.log(data1)
+        // getDataByCodeAndVal(data1).then((res)=>{
+        //   console.log(res.data)
+        //     data.unit=res.data
+        // })
+        // getDataByCodeAndVal(data2).then((res)=>{
+        //   console.log(res.data)
+        //     data.officeRoom=res.data
+        // })
+        // getDataByCodeAndVal(data3).then((res)=>{
+        //   console.log(res.data)
+        //     data.area=res.data
+        // })
         data.realName=this.id;
-        data.danwei=this.id;
-        data.unit=this.danweiIndex;
+        data.danwei=this.danwei;
+        data.unit=this.danweiIndex?this.danweiIndex:data.unit;
         data.chushi=this.chushi;
-        data.officeRoom=this.chushiIndex;
+        data.officeRoom=this.chushiIndex?this.chushiIndex:data.officeRoom;
         data.quyu=this.quyu;
-        data.area=this.quyuIndex;
+        data.area=this.quyuIndex?this.quyuIndex:data.area;
         data.office=this.bangongju;
         data.tel=this.zuoji;
         data.phone=this.phone?this.phone:'';
         data.repairDesc=this.mxIndex;
         data.repairObj=this.dxdex;
+        data.userId =3
+        console.log(data)
         // Axios.post(Url+'/gdSysUser/getUser',Qs.stringify(data)).then((res)=>{
         //   console.log(res)
         //   if(res.data.result==='success'){

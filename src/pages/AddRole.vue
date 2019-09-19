@@ -27,7 +27,7 @@
 <script>
 import Vue from 'vue'
 import Axios from 'axios'
-import Url from '@/api/index'
+import {getUserList,getDataByCodeAndVal} from '@/api/api'
 import Qs from 'qs'
 import { NavBar, Field, CellGroup, Cell, Toast,RadioGroup, Radio, Collapse, CollapseItem, DatetimePicker, Popup, Button, Card, Panel } from 'vant';
 
@@ -71,42 +71,31 @@ export default {
     }
   },
   created() {
-     Axios.get(Url+'/gdSysUser/getUserList').then((res)=>{
-      const data=res.data
+    getUserList().then((res)=>{
+     const data=res.data
+      console.log(data)
         data.forEach((res)=>{
+         
           let data=res
           let data1={'code':'DW','value':data.unit};
           let data2={'code':'CS','value':data.officeRoom};
           let data3={'code':'SSQY','value':data.area};
-          Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal',Qs.stringify(data1)).then((res)=>{
-            data.unit=(res.data)
+          console.log(data1)
+          getDataByCodeAndVal(data1).then((res)=>{
+            console.log(res)
+             data.unit=res.data
           })
-          Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal',Qs.stringify(data2)).then((res)=>{
-            data.officeRoom=(res.data)
+          getDataByCodeAndVal(data2).then((res)=>{
+            console.log(res)
+             data.officeRoom=res.data
           })
-          Axios.post(Url+'/gdsysDictionary/getDataByCodeAndVal',Qs.stringify(data3)).then((res)=>{
-            data.area=(res.data)
+          getDataByCodeAndVal(data3).then((res)=>{
+            console.log(res)
+             data.area=res.data
           })
-        
-       })
-        // data.realName=this.id;
-        // data.unit=this.danweiIndex;
-        // data.officeRoom=this.chushiIndex;
-        // data.area=this.quyuIndex;
-        // data.office=this.bangongju;
-        // data.tel=this.zuoji;
-        // data.phone=this.phone?this.phone:'';
-       this.items=res.data
-          // if(res.data.result==='success'){
-          //   this.$router.push({
-          //     path:'/success',
-          //     name:'Success',
-          //     params:{
-          //       word1:'填写成功',word2:'返回查看个人信息'
-          //     }
-          //   })
-          // }
-        }) 
+        })
+        this.items=res.data
+    }) 
   },
 
 }
