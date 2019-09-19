@@ -150,9 +150,9 @@ export default {
         data.office=this.bangongju;
         data.tel=this.zuoji;
         data.phone=this.phone?this.phone:'';
-        data.userId='3'
         saveUser(data).then((res)=>{
          if(res.data.result==='success'){
+           data.userId=res.data.user.id;
             localStorage.setItem('temp',JSON.stringify(data))
             this.$router.push({
               path:'/success',
