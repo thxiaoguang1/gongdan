@@ -50,7 +50,7 @@
 <script>
 import Vue from 'vue'
 import Axios from 'axios'
-import Url from '@/api/index'
+import {getDataByCode} from '@/api/api'
 import Qs from 'qs'
 import Dropdown from '../components/Dropdown'
 import { Field, CellGroup, Cell, RadioGroup, Radio, Collapse, CollapseItem, DatetimePicker, Popup, Button, Toast, Picker } from 'vant';
@@ -192,18 +192,18 @@ export default {
         data.phone=this.phone?this.phone:'';
         data.repairDesc=this.mxIndex;
         data.repairObj=this.dxdex;
-        Axios.post(Url+'/gdSysUser/getUser',Qs.stringify(data)).then((res)=>{
-          console.log(res)
-          if(res.data.result==='success'){
-            this.$router.push({
-              path:'/success',
-              name:'Success',
-              params:{
-                word1:'提交成功',word2:'关闭'
-              } 
-            })
-          }
-        })
+        // Axios.post(Url+'/gdSysUser/getUser',Qs.stringify(data)).then((res)=>{
+        //   console.log(res)
+        //   if(res.data.result==='success'){
+        //     this.$router.push({
+        //       path:'/success',
+        //       name:'Success',
+        //       params:{
+        //         word1:'提交成功',word2:'关闭'
+        //       } 
+        //     })
+        //   }
+        // })
       //  replace('/success')
         
       }else {
@@ -226,47 +226,46 @@ export default {
     let data3={'code':'SSQY'};
     let data4={'code':'GZMS'};
     let data5={'code':'WXDX'};
-    console.log(data)
-    Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data1)).then((res)=>{
+    getDataByCode(data1).then((res)=>{
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
         code.push(element.code)
         this.columns1=code
       });
-    }) 
-    Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data2)).then((res)=>{
+    })
+     getDataByCode(data2).then((res)=>{
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
         code.push(element.code)
         this.columns2=code
       });
-    }) 
-    Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data3)).then((res)=>{
+    })
+     getDataByCode(data3).then((res)=>{
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
         code.push(element.code)
         this.columns3=code
       });
-    }) 
-     Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data4)).then((res)=>{
+    })
+    getDataByCode(data4).then((res)=>{
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
         code.push(element.code)
         this.columns4=code
       });
-    }) 
-     Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data5)).then((res)=>{
+    })
+    getDataByCode(data5).then((res)=>{
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
         code.push(element.code)
         this.columns5=code
       });
-    }) 
+    })
   },
 }
 </script>

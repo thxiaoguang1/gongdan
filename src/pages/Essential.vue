@@ -49,7 +49,7 @@
 <script>
 import Vue from 'vue'
 import Axios from 'axios'
-import Url from '@/api/index'
+import {getDataByCode,saveUser} from '@/api/api'
 import Qs from 'qs'
 import Dropdown from '../components/Dropdown'
 import { Field, CellGroup, Cell, RadioGroup, Radio, Collapse, CollapseItem, DatetimePicker, Popup, Button, Toast, NavBar } from 'vant';
@@ -151,8 +151,8 @@ export default {
         data.office=this.bangongju;
         data.tel=this.zuoji;
         data.phone=this.phone?this.phone:'';
-        Axios.post(Url+'/gdSysUser/saveUser',Qs.stringify(data)).then((res)=>{
-          if(res.data.result==='success'){
+        saveUser(data).then((res)=>{
+         if(res.data.result==='success'){
             localStorage.setItem('temp',JSON.stringify(data))
             this.$router.push({
               path:'/success',
@@ -162,7 +162,7 @@ export default {
               }
             })
           }
-        }) 
+        })
         
       }else {
         Toast('请完善基本信息');
@@ -206,30 +206,30 @@ export default {
     let data1={'code':'DW'};
     let data2={'code':'CS'};
     let data3={'code':'SSQY'};
-    Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data1)).then((res)=>{
+     getDataByCode(data1).then((res)=>{
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
         code.push(element.code)
         this.columns1=code
       });
-    }) 
-    Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data2)).then((res)=>{
+    })
+     getDataByCode(data2).then((res)=>{
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
         code.push(element.code)
         this.columns2=code
       });
-    }) 
-    Axios.post(Url+'/gdsysDictionary/getDataByCode',Qs.stringify(data3)).then((res)=>{
+    })
+     getDataByCode(data3).then((res)=>{
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
         code.push(element.code)
         this.columns3=code
       });
-    }) 
+    })
   },
 }
 </script>

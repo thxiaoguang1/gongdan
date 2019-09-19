@@ -1,5 +1,5 @@
 
-const  Url='http://172.16.2.77:8080'
+import * as api from './api'
 
 
-export default Url
+export default api
