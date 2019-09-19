@@ -140,19 +140,57 @@ export default {
     gotolink(){
       let data={};
       if(this.id&&this.danwei&&this.chushi&&this.bangongju&&this.quyu&&this.zuoji){
+         let data1={'code':'DW'};
+        let data2={'code':'CS'};
+        let data3={'code':'SSQY'};
+        getDataByCode(data1).then((res)=>{
+          // console.log(res.data.details)
+            const details=res.data.details;
+            // let code=[];
+            details.forEach(res => {
+              if(this.danwei===res.code){
+                data.unit=res.value
+              }
+            });
+        })
+        getDataByCode(data2).then((res)=>{
+          // console.log(res.data.details)
+            const details=res.data.details;
+            // let code=[];
+            details.forEach(res => {
+              if(this.chushi===res.code){
+                data.officeRoom=res.value
+              }
+            });
+        })
+        getDataByCode(data3).then((res)=>{
+          // console.log(res.data.details)
+            const details=res.data.details;
+            // let code=[];
+            details.forEach(res => {
+              if(this.quyu===res.code){
+                data.area=res.value
+              }
+            });
+        })
         data.realName=this.id;
         data.danwei=this.danwei;
-        data.unit=this.danweiIndex;
+        data.unit=this.danweiIndex?this.danweiIndex:data.unit;
         data.chushi=this.chushi;
-        data.officeRoom=this.chushiIndex;
+        data.officeRoom=this.chushiIndex?this.chushiIndex:data.officeRoom;
         data.quyu=this.quyu;
-        data.area=this.quyuIndex;
+        data.area=this.quyuIndex?this.quyuIndex:data.area;
         data.office=this.bangongju;
         data.tel=this.zuoji;
         data.phone=this.phone?this.phone:'';
+        data.repairDesc=this.mxIndex;
+        data.repairObj=this.dxdex;
+        data.userId =this.userId;
+        console.log(data)
         saveUser(data).then((res)=>{
          if(res.data.result==='success'){
            data.userId=res.data.user.id;
+          
             localStorage.setItem('temp',JSON.stringify(data))
             this.$router.push({
               path:'/success',

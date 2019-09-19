@@ -71,26 +71,29 @@ export default {
     }
   },
   created() {
+    Axios.get('http://172.16.2.77:8080/gdSysUser/getUserList').then((res)=>{
+      console.log(res)
+    })
     getUserList().then((res)=>{
      const data=res.data
-      console.log(data)
+      // console.log(data)
         data.forEach((res)=>{
          
           let data=res
           let data1={'code':'DW','value':data.unit};
           let data2={'code':'CS','value':data.officeRoom};
           let data3={'code':'SSQY','value':data.area};
-          console.log(data1)
+          // console.log(data1)
           getDataByCodeAndVal(data1).then((res)=>{
-            console.log(res)
+            // console.log(res)
              data.unit=res.data
           })
           getDataByCodeAndVal(data2).then((res)=>{
-            console.log(res)
+            // console.log(res)
              data.officeRoom=res.data
           })
           getDataByCodeAndVal(data3).then((res)=>{
-            console.log(res)
+            // console.log(res)
              data.area=res.data
           })
         })

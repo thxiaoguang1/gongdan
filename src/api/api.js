@@ -5,5 +5,5 @@ export const getDataByCode = params => { return axios.post(`${host}/gdsysDiction
 export const getDataByCodeAndVal = params => { return axios.post(`${host}/gdsysDictionary/getDataByCodeAndVal`, Qs.stringify(params)) }
 export const editUser = params => { return axios.post(`${host}/gdSysUser/editUser`, Qs.stringify(params)) }
 export const getRoles = () => { return axios.post(`${host}/gdRoles/getRoles`) }
-export const saveUser = params => { return axios.post(`${host}/gdSysUser/saveUser`,{ params: params }) }
+export const saveUser = params => { return axios.post(`${host}/gdSysUser/saveUser`,Qs.stringify(params)) }
 export const getUserList = params => { return axios.get(`${host}/gdSysUser/getUserList`) }

@@ -240,19 +240,6 @@ export default {
               }
             });
         })
-        // console.log(data1)
-        // getDataByCodeAndVal(data1).then((res)=>{
-        //   console.log(res.data)
-        //     data.unit=res.data
-        // })
-        // getDataByCodeAndVal(data2).then((res)=>{
-        //   console.log(res.data)
-        //     data.officeRoom=res.data
-        // })
-        // getDataByCodeAndVal(data3).then((res)=>{
-        //   console.log(res.data)
-        //     data.area=res.data
-        // })
         data.realName=this.id;
         data.danwei=this.danwei;
         data.unit=this.danweiIndex?this.danweiIndex:data.unit;
