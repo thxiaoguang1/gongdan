@@ -101,6 +101,7 @@ export default {
        required:true,
       valueDuixiang:'',
       valueMiaoshu:'',
+      userId:'',
       id:'',
       danwei:'',
       chushi:'',
@@ -264,7 +265,7 @@ export default {
         data.phone=this.phone?this.phone:'';
         data.repairDesc=this.mxIndex;
         data.repairObj=this.dxdex;
-        data.userId =3
+        data.userId =this.userId;
         console.log(data)
         // Axios.post(Url+'/gdSysUser/getUser',Qs.stringify(data)).then((res)=>{
         //   console.log(res)
@@ -295,6 +296,7 @@ export default {
     this.bangongju=data.office;
     this.quyu=data.quyu;
     this.zuoji=data.tel;
+    this.userId=data.userId;
     let data1={'code':'DW'};
     let data2={'code':'CS'};
     let data3={'code':'SSQY'};
