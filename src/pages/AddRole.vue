@@ -71,9 +71,7 @@ export default {
     }
   },
   created() {
-    Axios.get('http://172.16.2.77:8080/gdSysUser/getUserList').then((res)=>{
-      console.log(res)
-    })
+   
     getUserList().then((res)=>{
      const data=res.data
       // console.log(data)
