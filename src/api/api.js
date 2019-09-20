@@ -6,4 +6,7 @@ export const getDataByCodeAndVal = params => { return axios.post(`${host}/gdsysD
 export const editUser = params => { return axios.post(`${host}/gdSysUser/editUser`, Qs.stringify(params)) }
 export const getRoles = () => { return axios.post(`${host}/gdRoles/getRoles`) }
 export const saveUser = params => { return axios.post(`${host}/gdSysUser/saveUser`,Qs.stringify(params)) }
-export const getUserList = params => { return axios.get(`${host}/gdSysUser/getUserList`) }
+export const getUserList = () => { return axios.get(`${host}/gdSysUser/getUserList`) }
+export const saveAdd = params => { return axios.post(`${host}/gdRepair/saveAdd`,Qs.stringify(params)) }
+export const getRepairList = params => { return axios.post(`${host}/gdRepair/getRepairList`,Qs.stringify(params)) }
+export const getRepairDetails = params => { return axios.post(`${host}/gdRepair/getRepairDetails`,Qs.stringify(params)) }
