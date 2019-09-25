@@ -1,7 +1,7 @@
 <template>
   <div>
-    <Time :placeholder="placeholder1" :label='label1'  @getValue='getValue1'></Time>
-    <Time :placeholder="placeholder2" :label='label2' @getValue='getValue2'></Time>
+    <Time :placeholder="placeholder1" :label='label1'  @getValue='getValue1' :valueTime='startValue'></Time>
+    <Time :placeholder="placeholder2" :label='label2' @getValue='getValue2' :valueTime='endValue'></Time>
     <dropdown :placeholder="placeholder" :label='label' :columns='columns' @getValue='getValue' :inputAlign='inputAlign' class="peple" :value='value'></dropdown>
   </div>   
 </template>
@@ -10,6 +10,7 @@
 import Vue from 'vue'
 import Time from './Time'
 import Dropdown from './Dropdown'
+import {getRepairDetails,getRepairUserList,repairAssigned,getDataByCodeAndVal,getAssignList} from '@/api/api'
 import { mapGetters,mapActions } from "vuex";
 import { Field, CellGroup, Cell, RadioGroup, Radio, Collapse, CollapseItem, DatetimePicker, Popup, Button, Card, Panel, Picker } from 'vant';
 export default {
@@ -45,10 +46,12 @@ export default {
       showPicker:false,
       placeholder:'请选择维修人员',
       label:'维修人员',
-      columns:['张三','李四','王二'],
+      columns:[],
       display:false,
       inputAlign:'right',
       display:false,
+      startValue:'',
+      endValue:'',
       items:[
         {'xuhao':4,'name':'张三','bangonshi':'c204','miaoshu':'电脑蓝屏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','phone':'123123122131','duixiang':'电脑','time':'2019-09-18 13:28','state':'待处理','danhao':'c123123123'},
         {'xuhao':3,'name':'张三','bangonshi':'c201','miaoshu':'显示屏问题','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','phone':'123123122131','duixiang':'电脑','time':'2019-09-18 13:28','state':'待处理','danhao':'c123123123'},
@@ -73,7 +76,7 @@ export default {
     },
     getValue1(value){
       console.log(value)
-      // this.startTime=value;
+      this.startValue=value;
       const startTime={
         startTime:value
         }
@@ -81,7 +84,7 @@ export default {
     },
     getValue2(value){
       console.log(value)
-      // this.endTime=value;
+      this.endValue=value;
       const endTime={
         endTime:value
         }
@@ -93,13 +96,18 @@ export default {
 
   },
   created() {
-    // console.log(this.startTime)
-    // console.log(this.getStartTime.startTime,this.getdanhao.danhao)
-    // this.$router.push({
-    //   path:'/Success',
-    //   name:'success',
-    //   params:{ word1: '接单成功',word2: '查看当前处理情况'  }
-    // })
+    console.log(this.getStartTime.startTime)
+    this.startValue=this.getStartTime.startTime?this.getStartTime.startTime:'';
+    this.endValue=this.getEndTime.endTime?this.getEndTime.endTime:'';
+    this.value=this.getname.name?this.getname.name:'';
+    let dataRepairUserList={'roleId':4};
+    let arr=[];
+    getRepairUserList(dataRepairUserList).then((res)=>{
+      res.data.forEach((res)=>{
+        arr.push(res.realName)
+      })
+    })
+    this.columns=arr;
   },
 }
 </script>

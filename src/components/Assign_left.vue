@@ -107,7 +107,6 @@ export default {
           getDataByCodeAndVal(data1).then((res1)=>{
             // console.log(res)
              arr.unit=res1.data
-             res.danwei=res1.data;
               
           })
           getDataByCodeAndVal(data2).then((res1)=>{
@@ -131,6 +130,7 @@ export default {
              arr.repairObj=res1.data
              res.repairObj=res1.data;
           })
+
           this.items.push(arr)
         })
         console.log(this.items)

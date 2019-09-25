@@ -4,7 +4,7 @@
       readonly
       clickable
       required
-      v-model="value"
+      v-model="valueTime"
       :label="label"
       :placeholder="placeholder"
       input-align='right'
@@ -40,7 +40,7 @@ export default {
     [Button.name]: Button,
     [Picker.name]: Picker,
   },
-  props:['placeholder','label','startTime','endTime'],
+  props:['placeholder','label','startTime','endTime','valueTime'],
   // props:{
   //   newButton:{
   //     type: String
@@ -55,12 +55,11 @@ export default {
       username:'',
       message:'',
       currentStartDate: false,
-      minDate: new Date(),
+      minDate: new Date(2019, 0, 1),
       maxDate: new Date(2030, 10, 1),
       columns:['张三', '李四', '招儿', '小明', '小风'],
       activeNames: ['0'],
-      radio: '1',
-      value:'',
+      radio: '1'
       // msg: 'Welcome to Your Vue.js App'
     }
   },

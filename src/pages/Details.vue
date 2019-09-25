@@ -20,7 +20,7 @@
 import Vue from 'vue'
 import Axios from 'axios'
 import {  Tab, Tabs, NavBar, Step, Steps } from 'vant';
-import {getRepairDetails} from '@/api/api'
+import {getRepairDetails,getRepairById} from '@/api/api'
 
 export default {
    components: {
@@ -61,10 +61,12 @@ export default {
     let id=this.$route.params.params.id;
     let data={'billId':id}
     let data1={};
+//     getRepairById(data).then((res)=>{
+// console.log(res,'1')
+//     })
     getRepairDetails(data).then((res)=>{
-      console.log(data,'1')
+      console.log(res,'2')
       res.data.forEach((res)=>{
-        console.log(res,'2')
        if(res.state===0){
           data1.state='提交报修'
         }else if(res.state===1){
