@@ -18,7 +18,7 @@
         <p>维修对象:{{item.repairObj}}</p>
         <p>报修人:{{item.realName}}</p>
         <p>座机:{{item.tel}}</p>
-        <p>地址:{{item.unit}}{{item.office}}</p>
+        <p>地址:{{item.area}}{{item.office}}</p>
         <p>故障描述:{{item.repairDesc}}</p>
         <!-- <p>故障描述:{{item.miaoshu}}</p> -->
       </div>

@@ -10,3 +10,6 @@ export const getUserList = () => { return axios.get(`${host}/gdSysUser/getUserLi
 export const saveAdd = params => { return axios.post(`${host}/gdRepair/saveAdd`,Qs.stringify(params)) }
 export const getRepairList = params => { return axios.post(`${host}/gdRepair/getRepairList`,Qs.stringify(params)) }
 export const getRepairDetails = params => { return axios.post(`${host}/gdRepair/getRepairDetails`,Qs.stringify(params)) }
+export const getRepairUserList = params => { return axios.post(`${host}/gdSysUser/getRepairUserList`,Qs.stringify(params)) }
+export const repairAssigned = params => { return axios.post(`${host}/gdRepair/repairAssigned`,Qs.stringify(params)) }
+export const getAssignList = params => { return axios.post(`${host}/gdRepair/getAssignList`,Qs.stringify(params)) }
