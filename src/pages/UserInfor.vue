@@ -45,7 +45,10 @@ export default {
       params.scope='snsapi_userinfo';
       params.redirect_uri=encodeURI(window.location.href)
       let queryString = this.getQueryString(params);
-      axios.post(`https://open.weixin.qq.com/connect/oauth2/authorize?${queryString}`).then(res=>{
+      // axios.post(`https://open.weixin.qq.com/connect/oauth2/authorize?${queryString}`).then(res=>{
+      //   console.log(res)
+      // })
+      axios.post(`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${params.appId}&redirect_uri=${params.redirect_uri}&response_type=code&scope='snsapi_userinfo'`).then(res=>{
         console.log(res)
       })
 
