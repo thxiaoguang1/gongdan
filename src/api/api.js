@@ -14,3 +14,5 @@ export const getRepairUserList = params => { return axios.post(`${host}/gdSysUse
 export const repairAssigned = params => { return axios.post(`${host}/gdRepair/repairAssigned`,Qs.stringify(params)) }
 export const getAssignList = params => { return axios.post(`${host}/gdRepair/getAssignList`,Qs.stringify(params)) }
 export const getRepairById = params => { return axios.post(`${host}/gdRepair/getRepairById`,Qs.stringify(params)) }
+export const getHandleList = params => { return axios.post(`${host}/gdRepair/getHandleList`,Qs.stringify(params)) }
+export const repairProcess = params => { return axios.post(`${host}/gdRepair/repairProcess`,Qs.stringify(params)) }

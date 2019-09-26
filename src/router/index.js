@@ -21,10 +21,17 @@ import StartState from '@/pages/StartState'
 import statePlantJump from '@/pages/statePlant_jump'
 import Role from '@/pages/role'
 import AddRole from '@/pages/AddRole'
+import IndexHtml from '@/pages/IndexHtml'
 Vue.use(Router)
 
 export default new Router({
   routes: [
+    {
+      // 跳转页面
+      path: '/index',
+      name: 'IndexHtml',
+      component: IndexHtml
+    },
     {
       // 我要报修
       path: '/repair',
