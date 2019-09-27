@@ -10,9 +10,9 @@
       input-align='right'
     />
     <van-button type="primary" size="large" class="chaxun" @click="query">查询</van-button>
-    <van-panel v-for='(item,index) in items' class="evaluate" :key='index' @click="evaluate_list(item.danhao)" v-if="display">
+    <van-panel v-for='(item,index) in items' class="evaluate" :key='index' @click="evaluate_list(item)" v-if="display">
       <div class="border">
-          <p>{{item.time}}</p>
+          <p>{{item.stateDate}}</p>
            <p style="color: red" v-if="item.state!=='完成'">状态：{{item.state}}</p>
           <p style="color: green" v-if="item.state==='完成'">状态：{{item.state}}</p>
         </div>
@@ -23,12 +23,12 @@
         <p>办公室:{{item.bangongshi}}</p>
         <p>所属区域:{{item.quyu}}</p>
         <p>联系电话:{{item.phone}}</p> -->
-        <p>维修单号:{{item.danhao}}</p>
-        <p>维修对象:{{item.duixiang}}</p>
-        <p>报修人:{{item.name}}</p>
-        <p>座机:{{item.zuoji}}</p>
-        <p>地址:{{item.quyu}}{{item.bangonshi}}</p>
-        <p>故障描述:{{item.miaoshu}}</p>
+        <p>维修单号:{{item.repairNum}}</p>
+        <p>维修对象:{{item.repairObj}}</p>
+        <p>报修人:{{item.realName}}</p>
+        <p>座机:{{item.tel}}</p>
+        <p>地址:{{item.area}}{{item.office}}</p>
+        <p>故障描述:{{item.repairDesc}}</p>
          
         <!-- <p>故障描述:{{item.miaoshu}}</p> -->
       </div>
@@ -40,7 +40,7 @@
 
 <script>
 import Vue from 'vue'
-import {getHandleList,getDataByCodeAndVal} from '@/api/api'
+import {getHandleList,getDataByCodeAndVal,repairProcess,getAssignList,getSysConfig} from '@/api/api'
 import StartDatetime from './StartDatetime'
 import EndDatetime from './EndDatetime'
 import { mapGetters,mapActions } from "vuex";
@@ -70,10 +70,7 @@ export default {
       currentStartDate:false,
       startTime:'',
       display:false,
-      placeholder:'请选择维修人员',
-      label:'维修指派',
       number:'',
-      columns: ['电脑', '服务器', '主机','其他'],
       items:[]
       // msg: 'Welcome to Your Vue.js App'
     }
@@ -83,12 +80,23 @@ export default {
     p(s) {
       return s < 10 ? '0' + s : s
     },
+    getLocalTime(date) { 
+       let t = new Date(date);   // 实例化时间戳  time.后面的是时间获取转换的对应方法
+        let y = t.getFullYear();
+        let m = t.getMonth()+1;
+        m = m<10?"0"+m:m;
+        let d = t.getDate()<10?"0"+t.getDate():t.getDate(); 
+        let h = t.getHours()<10?"0"+t.getHours():t.getHours();
+        let min = t.getMinutes()<10?"0"+t.getMinutes():t.getMinutes();
+        let s = t.getSeconds()<10?"0"+t.getSeconds():t.getSeconds();                     
+        return  y+"-"+m+"-"+d+" "+h+":"+min+":"+s;   // 返回给外面调用它的地方
+    },
     evaluate_list(value){
       console.log(value)
       this.$router.push({
         path:'/details',
         name:'Details',
-        params:{ }
+        params:{'params':value}
       })
     },
     onConfirm(value) {
@@ -104,17 +112,43 @@ export default {
       this.number=this.number?this.number:'';
       if(this.getStartTime.startTime&&this.getEndTime.endTime||this.number){
         let userId=JSON.parse(localStorage.getItem('temp')).userId;
-        let data1={'isHandle':1,'startDate':this.getStartTime.startTime,'endDate':this.getEndTime.endTime,'repairNum':this.number}
+        let dataList={'isHandle':1,'startDate':this.getStartTime.startTime,'endDate':this.getEndTime.endTime,'repairNum':this.number,'userId':userId}
         let arr=[];
-        getHandleList(data1).then((res)=>{
-          let data=[];
-          data=res.data
-           if(data&&data.length){
-              console.log(res.data)
+        let dataAndVal=[];
+        
+        getHandleList(dataList).then((res)=>{
+          
+          dataAndVal=res.data;
+          dataAndVal.forEach((res)=>{
+            res.state='完成';
+            res.stateDate=this.getLocalTime(res.stateDate);
+          })
+          if(res.data&&res.data.length){
+            let data1={'code':'DW','value':dataAndVal.unit};
+            let data2={'code':'CS','value':dataAndVal.officeRoom};
+            let data3={'code':'SSQY','value':dataAndVal.area};
+            // console.log(data1)
+            getDataByCodeAndVal(data1).then((res)=>{
+              // console.log(res)
+              dataAndVal.unit=res.data
+            })
+            getDataByCodeAndVal(data2).then((res)=>{
+              // console.log(res)
+              dataAndVal.officeRoom=res.data
+            })
+            getDataByCodeAndVal(data3).then((res)=>{
+              // console.log(res)
+              dataAndVal.area=res.data
+            })
+            console.log(dataAndVal)
+            
+            
+             this.items=(dataAndVal)
            }else {
                Notify('暂无数据');
             }
         })
+       
         this.display=true;
       }else{
           Toast('请选择起止时间或者订单号')

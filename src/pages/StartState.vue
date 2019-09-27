@@ -94,6 +94,7 @@ export default {
       state:'',
       stateIndex:'',
       zichanmiaoshu:'',
+      zichanmiaoshuIndex:'',
       // placeholder:'请选择维修人员',
       // label:'维修人员',
       // columns:['张三','李四','王二'],
@@ -144,9 +145,13 @@ export default {
       console.log(params)
       // 获取新数据，刷新页面与取值
       let repairState='';
+      let wxrepairDesc='';
+      let wxassetNum ='';
       let id=params.id;
       let userId=params.userId;
       let data1={'code':'WXZZ'};
+      let data2={'code':'WXGZMS'};
+      let data3={'code':'WXZCBH'};
       getDataByCode(data1).then((res)=>{
         // console.log(res)
         const details=res.data.details;
@@ -158,26 +163,46 @@ export default {
         });
         // console.log(repairState)
         if(this.state&&this.state==='待处理'&&this.valueTime){
-         
-          console.log(this.valueTime)
           let ProcessData={'billId':id,'doorOfTime':this.valueTime,'repairState':repairState,'userId':userId,'remark':this.message}
-          console.log(ProcessData)
           repairProcess(ProcessData).then((res)=>{
             if(res.data==="success"){
               Toast('已提交')
+              this.$router.go(-1)
             }
           })          
         // this.$router.go(-1)
         }else if(this.state&&this.state!=='待处理'&&this.zichanmiaoshu&&this.zichanxinxi){
-          let ProcessData={'billId':id,'doorOfTime':'','repairState':repairState,'userId':userId}
-          console.log(ProcessData)
-          repairProcess(ProcessData).then((res)=>{
-            if(res.data==="success"){
-              Toast('已提交')
-            }
-          })    
-          Toast('已提交')
-          this.$router.go(-1)
+          getDataByCode(data2).then((res)=>{
+            const details=res.data.details;
+            let code=[];
+            details.forEach(element => {
+              console.log(this.zichanmiaoshu,element.code)
+              if(this.zichanmiaoshu===element.code){
+                wxrepairDesc=element.value
+              }     
+            });
+            getDataByCode(data3).then((res)=>{
+              const details=res.data.details;
+              let code=[];
+              details.forEach(element => {
+                console.log(this.zichanxinxi,element.code)
+                if(this.zichanxinxi===element.code){
+                  wxassetNum=element.value
+                }     
+              });
+                console.log(wxassetNum)
+                let ProcessData={'billId':id,'doorOfTime':'','repairState':repairState,'wxrepairDesc':wxrepairDesc,'wxassetNum':wxassetNum,'userId':userId,'remark':this.message}
+                repairProcess(ProcessData).then((res)=>{
+                  if(res.data==="success"){
+                    Toast('已提交')
+                  }
+                })    
+                Toast('已提交')
+                this.$router.go(-1)          
+            })
+            
+          })  
+
         }else {
           Toast('请填写信息')
         }
@@ -192,10 +217,24 @@ export default {
     },
   },
   created() {
+    const params=this.$route.params.params;
+    console.log(params)
+    this.name=params.realName;
+    this.danhao=params.repairNum;
+    this.duixiang=params.repairObj;
+    this.zuoji=params.tel;
+    this.dizhi=params.area+params.office;
+    this.time=params.createDate;
+    this.miaoshu=params.repairDesc;
+    this.state=params.repairState;
+    this.valueTime=params.doorOfTime;
+    this.message=params.remark;
+    this.zichanmiaoshu=params.wxrepairDesc;
+    this.zichanxinxi=params.wxassetNum;
     let data1={'code':'WXZZ'};
     let data2={'code':'DSMSJ'};
-    let data3={'code':'YCGZMS'};
-    let data4={'code':'YCZCBH'};
+    let data3={'code':'WXGZMS'};
+    let data4={'code':'WXZCBH'};
     getDataByCode(data1).then((res)=>{
       const details=res.data.details;
       let code=[];
@@ -217,28 +256,26 @@ export default {
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
+        if(this.zichanmiaoshu===element.value){
+          this.zichanmiaoshu=element.code;
+        }
         code.push(element.code)
         this.columns3=code
+       
       });
     })
     getDataByCode(data4).then((res)=>{
       const details=res.data.details;
       let code=[];
       details.forEach(element => {
+        if(this.zichanxinxi===element.value){
+          this.zichanxinxi=element.code;
+        }
         code.push(element.code)
         this.columns4=code
       });
     })
-    const params=this.$route.params.params;
-    console.log(params)
-    this.name=params.realName;
-    this.danhao=params.repairNum;
-    this.duixiang=params.repairObj;
-    this.zuoji=params.tel;
-    this.dizhi=params.area+params.office;
-    this.time=params.createDate;
-    this.miaoshu=params.repairDesc;
-    this.state=params.repairState;
+    
     console.log(this.state)
     if(params.repairState==="提交报修"||params.repairState==="确认指派"){
       this.state='待处理'
