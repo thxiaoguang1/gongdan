@@ -12,6 +12,7 @@
     />
     <van-popup v-model="currentStartDate" round v-if="!newButton" position="bottom" get-container="#app">
       <van-datetime-picker
+        type="date"
         :min-date="minDate"
         :max-date="maxDate"
         @cancel="currentStartDate = false"
@@ -55,7 +56,7 @@ export default {
       message:'',
       endTime:'',
       currentStartDate: false,
-      minDate: new Date(),
+      minDate: new Date(2019, 0, 1),
       maxDate: new Date(2030, 10, 1),
       columns:['张三', '李四', '招儿', '小明', '小风'],
       activeNames: ['0'],
@@ -72,8 +73,7 @@ export default {
     onConfirmStartTime(value){
       const d = new Date(value)
       const resDate = d.getFullYear() + '-' + this.p((d.getMonth() + 1)) + '-' + this.p(d.getDate())
-      const resTime = this.p(d.getHours()) + ':' + this.p(d.getMinutes()) + ':' + this.p(d.getSeconds())
-      this.endTime=resDate+'  '+resTime;
+      this.endTime=resDate;
       this.currentStartDate = false;
        const endTime={
         endTime:this.endTime,

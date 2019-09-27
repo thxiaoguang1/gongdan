@@ -6,7 +6,7 @@
     left-arrow
     @click-left="onClickLeft"
     />
-    <van-steps direction="vertical" :active='items.active'>
+    <van-steps direction="vertical" :active='active'>
     <van-step style="margin-top:45px" v-for='(item,index) in items' :key='index'>
       <h3><span>【</span>{{item.state}}<span>】</span></h3>
       <p>{{item.createDate}}</p>
@@ -34,8 +34,8 @@ export default {
   name: 'Details',
   data () {
     return {
-      active:'',
       items:[],
+      active:1,
       // msg: 'Welcome to Your Vue.js App'
     }
   },
@@ -65,32 +65,37 @@ export default {
 // console.log(res,'1')
 //     })
     getRepairDetails(data).then((res)=>{
+
       console.log(res,'2')
-      res.data.forEach((res)=>{
+      data1=res.data
+      this.active=data1.length-1
+      data1.forEach((res)=>{
+        console.log(res)
        if(res.state===0){
-          data1.state='提交报修'
+          res.state='提交报修'
         }else if(res.state===1){
-          data1.state='确认指派'
+          res.state='确认指派'
         }else if(res.state===2){
-          data1.state='待处理'
+          res.state='待处理'
         }else if(res.state===3){
-          data1.state='已到达'
+          res.state='已到达'
         }else if(res.state===4){
-          data1.state='处理中'
+          res.state='处理中'
         }else if(res.state===5){
-          data1.state='已送原厂'
+          res.state='已送原厂'
         }else if(res.state===6){
-          data1.state='厂家维修'
+          res.state='厂家维修'
         }else if(res.state===7){
-          data1.state='已送回'
+          res.state='已送回'
         }else if(res.state===8){
-          data1.state='已取回'
+          res.state='已取回'
         }else{
-          data1.state='完成'
+          res.state='完成'
         }
-        data1.createDate=this.getLocalTime(res.createDate)
+        res.createDate=this.getLocalTime(res.createDate)
+        // this.items.push(data1);
       })
-        this.items.push(data1);
+        this.items=data1.reverse()
         console.log(this.items)
     })
         

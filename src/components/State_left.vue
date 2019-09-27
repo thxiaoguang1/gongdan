@@ -2,8 +2,8 @@
   <div>
     <van-panel v-for='(item,index) in items' class="evaluate" :key='index' v-if="!newButton">
       <div class="border">
-          <p>{{item.time}}</p>
-          <p>{{item.state}}</p>
+          <p>{{item.createDate}}</p>
+          <p>状态：{{item.repairState}}</p>
         </div>
       <div class="evaluate_list position">
         <!-- <p>姓名:{{item.name}}</p>
@@ -12,12 +12,12 @@
         <p>办公室:{{item.bangongshi}}</p>
         <p>所属区域:{{item.quyu}}</p>
         <p>联系电话:{{item.phone}}</p> -->
-        <p>维修单号:{{item.danhao}}</p>
-        <p>维修对象:{{item.duixiang}}</p>
-        <p>报修人:{{item.name}}</p>
-        <p>座机:{{item.zuoji}}</p>
-        <p>地址:{{item.quyu}}{{item.bangonshi}}</p>
-        <p>故障描述:{{item.miaoshu}}</p>
+        <p>维修单号:{{item.repairNum}}</p>
+        <p>维修对象:{{item.repairObj}}</p>
+        <p>报修人:{{item.realName}}</p>
+        <p>座机:{{item.tel}}</p>
+        <p>地址:{{item.area}}{{item.office}}</p>
+        <p>故障描述:{{item.repairDesc}}</p>
         <!-- <p>故障描述:{{item.miaoshu}}</p> -->
       </div>
     
@@ -32,6 +32,7 @@
 import Vue from 'vue'
 import Dropdown from './Dropdown'
 import field from './field'
+import {getHandleList,getDataByCodeAndVal} from '@/api/api'
 import { Field, Card, Panel, Picker, Popup, DatetimePicker,Button,Toast } from 'vant';
 export default {
    components: {
@@ -80,12 +81,7 @@ export default {
       zichanxinxi:'',
       message:'',
       columns3: ['资产编号', '资产编号'],
-      items:[
-        {'name':'张三','bangonshi':'c204','miaoshu':'电脑蓝屏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','zuoji':'029-1123','duixiang':'电脑','time':'2019-09-18 13:28','state':'待处理','danhao':'c123123123'},
-        {'name':'张三','bangonshi':'c201','miaoshu':'显示屏问题','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','zuoji':'029-1123','duixiang':'电脑','time':'2019-09-18 13:28','state':'已到达','danhao':'c133123123'},
-         {'name':'张三','bangonshi':'c202','miaoshu':'主机损坏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','zuoji':'029-1123','duixiang':'电脑','time':'2019-09-18 13:28','state':'处理中','danhao':'c143123123'},
-          {'name':'张三','bangonshi':'c203','miaoshu':'主机损坏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','zuoji':'029-1123','duixiang':'电脑','time':'2019-09-18 13:28','state':'已送达原厂','danhao':'c153123123'},
-      ]
+      items:[]
       // msg: 'Welcome to Your Vue.js App'
     }
   },
@@ -131,6 +127,17 @@ export default {
       this.startTime=value
       this.currentStartDate = false;
     },
+     getLocalTime(date) { 
+       let t = new Date(date);   // 实例化时间戳  time.后面的是时间获取转换的对应方法
+        let y = t.getFullYear();
+        let m = t.getMonth()+1;
+        m = m<10?"0"+m:m;
+        let d = t.getDate()<10?"0"+t.getDate():t.getDate(); 
+        let h = t.getHours()<10?"0"+t.getHours():t.getHours();
+        let min = t.getMinutes()<10?"0"+t.getMinutes():t.getMinutes();
+        let s = t.getSeconds()<10?"0"+t.getSeconds():t.getSeconds();                     
+        return  y+"-"+m+"-"+d+" "+h+":"+min+":"+s;   // 返回给外面调用它的地方
+    },
     input(value){
       this.message=value;
       // console.log(value)
@@ -157,7 +164,73 @@ export default {
     },
   },
   created() {
-    console.log(this.state)
+    let userId=JSON.parse(localStorage.getItem('temp')).userId;
+    let data1={'isHandle':0,'userId':userId}
+    let arr=[];
+    getHandleList(data1).then((res)=>{
+        res.data.forEach((res)=>{
+          arr=res;
+          console.log(res)
+          arr.createDate=this.getLocalTime(res.createDate);
+          arr.state=res.state;
+          arr.repairState=res.state;
+          if(arr.repairState===0){
+            arr.repairState='提交报修'
+          }else if(res.state===1){
+            arr.repairState='确认指派'
+          }else if(res.state===2){
+            arr.repairState='待处理'
+          }else if(res.state===3){
+            arr.repairState='已到达'
+          }else if(res.state===4){
+            arr.repairState='处理中'
+          }else if(res.state===5){
+            arr.repairState='已送原厂'
+          }else if(res.state===6){
+            arr.repairState='厂家维修'
+          }else if(res.state===7){
+            arr.repairState='已送回'
+          }else if(res.state===8){
+            arr.repairState='已取回'
+          }else{
+            arr.repairState='完成'
+          }
+          let data1={'code':'DW','value':res.unit};
+          let data2={'code':'CS','value':res.officeRoom};
+          let data3={'code':'SSQY','value':res.area};
+          let data4={'code':'GZMS','value':res.repairDesc};
+          let data5={'code':'WXDX','value':res.repairObj};
+          // console.log(data1)
+          getDataByCodeAndVal(data1).then((res1)=>{
+            // console.log(res)
+             arr.unit=res1.data
+              
+          })
+          getDataByCodeAndVal(data2).then((res1)=>{
+            // console.log(res)
+             arr.officeRoom=res1.data
+             res.bangongshi=res1.data;
+             
+          })
+          getDataByCodeAndVal(data3).then((res1)=>{
+            // console.log(res)
+             arr.area=res1.data
+             res.quyu=res1.data;
+          })
+           getDataByCodeAndVal(data4).then((res1)=>{
+            // console.log(res)
+             arr.repairDesc=res1.data
+             res.repairDesc=res1.data;
+          })
+           getDataByCodeAndVal(data5).then((res1)=>{
+            // console.log(res)
+             arr.repairObj=res1.data
+             res.repairObj=res1.data;
+          })
+
+          this.items.push(arr)
+        })
+    })
     // this.items.map(item=>{
     //   // console.log(item.state)
     //   if(item.state==='待处理'){

@@ -40,10 +40,11 @@
 
 <script>
 import Vue from 'vue'
+import {getHandleList,getDataByCodeAndVal} from '@/api/api'
 import StartDatetime from './StartDatetime'
 import EndDatetime from './EndDatetime'
 import { mapGetters,mapActions } from "vuex";
-import { Field, Card, Panel, Picker, Popup, DatetimePicker,Button,Toast } from 'vant';
+import { Field, Card, Panel, Picker, Popup, DatetimePicker,Button,Toast,Notify } from 'vant';
 export default {
    components: {
     StartDatetime,
@@ -56,6 +57,7 @@ export default {
     [DatetimePicker.name]: DatetimePicker,
     [Button.name]: Button,
     [Toast.name]: Toast,
+    [Notify.name]: Notify,
   },
   props:{
     newButton:Number
@@ -72,12 +74,7 @@ export default {
       label:'维修指派',
       number:'',
       columns: ['电脑', '服务器', '主机','其他'],
-      items:[
-        {'name':'张三','bangonshi':'c204','miaoshu':'电脑蓝屏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','zuoji':'029-111111','duixiang':'电脑','time':'2019-09-18 13:28','state':'完成','danhao':'c123123123'},
-        {'name':'张三','bangonshi':'c201','miaoshu':'显示屏问题','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','zuoji':'029-111111','duixiang':'电脑','time':'2019-09-18 13:28','state':'完成','danhao':'c133123123'},
-         {'name':'张三','bangonshi':'c202','miaoshu':'主机损坏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','zuoji':'029-111111','duixiang':'电脑','time':'2019-09-18 13:28','state':'完成','danhao':'c143123123'},
-          {'name':'张三','bangonshi':'c203','miaoshu':'主机损坏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','zuoji':'029-111111','duixiang':'电脑','time':'2019-09-18 13:28','state':'完成','danhao':'c153123123'},
-      ]
+      items:[]
       // msg: 'Welcome to Your Vue.js App'
     }
   },
@@ -104,7 +101,20 @@ export default {
       console.log(this.getStartTime.startTime)
       console.log(this.number)
       console.log(this.getEndTime.endTime)
+      this.number=this.number?this.number:'';
       if(this.getStartTime.startTime&&this.getEndTime.endTime||this.number){
+        let userId=JSON.parse(localStorage.getItem('temp')).userId;
+        let data1={'isHandle':1,'startDate':this.getStartTime.startTime,'endDate':this.getEndTime.endTime,'repairNum':this.number}
+        let arr=[];
+        getHandleList(data1).then((res)=>{
+          let data=[];
+          data=res.data
+           if(data&&data.length){
+              console.log(res.data)
+           }else {
+               Notify('暂无数据');
+            }
+        })
         this.display=true;
       }else{
           Toast('请选择起止时间或者订单号')

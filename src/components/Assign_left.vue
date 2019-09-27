@@ -85,7 +85,7 @@ export default {
 
   },
   created() {
-    let dataAssignList={'isAssigned':1};
+    let dataAssignList={'isAssigned':0};
     // let dataRepairUserList={'roleId':4};
     let arr=[];
     // getRepairUserList(dataRepairUserList).then(res=>{

@@ -16,9 +16,9 @@
       <van-cell title="报修时间" :value="time" size="large" />
       <van-cell title="故障描述" :value="miaoshu" size="large" />
       <dropdown :placeholder="placeholder1" :label='label1' :required='required' :columns='columns1' @getValue='getValue1' :inputAlign='inputAlign' :value='state' class="peple" :disabled='disabled'></dropdown>
-      <dropdown :placeholder="placeholder" :label='label' @getValue='getValue' :required='required' :columns='columns' :inputAlign='inputAlign' v-if='showTime' class="peple" :value='valueTime'></dropdown>
-      <dropdown class="peple" :placeholder="placeholder4" :label='label4' @getValue='getValue4' :required='required' :columns='columns4' :inputAlign='inputAlign' v-if='showmiaoshu' :value='zichanmiaoshu'></dropdown>
-      <dropdown class="peple" :placeholder="placeholder3" :label='label3' @getValue='getValue3' :required='required' :columns='columns3' :inputAlign='inputAlign' v-if='showzichan' :value='zichanxinxi'></dropdown>
+      <dropdown :placeholder="placeholder" :label='label' @getValue='getValue' :required='required' :columns='columns2' :inputAlign='inputAlign' v-if='showTime' class="peple" :value='valueTime'></dropdown>
+      <dropdown class="peple" :placeholder="placeholder4" :label='label4' @getValue='getValue4' :required='required' :columns='columns3' :inputAlign='inputAlign' v-if='showmiaoshu' :value='zichanmiaoshu'></dropdown>
+      <dropdown class="peple" :placeholder="placeholder3" :label='label3' @getValue='getValue3' :required='required' :columns='columns4' :inputAlign='inputAlign' v-if='showzichan' :value='zichanxinxi'></dropdown>
         <van-field
           v-model="message"
           label="备注"
@@ -37,6 +37,7 @@
 import Vue from 'vue'
 import Dropdown from '../components/Dropdown'
 import field from '../components/field'
+import {getDataByCode,getDataByCodeAndVal,saveAdd,repairProcess} from '@/api/api'
 import { Toast,Field, CellGroup, Cell, RadioGroup, Radio, Collapse, CollapseItem, DatetimePicker, Popup, Button, NavBar, Rate } from 'vant';
 export default {
    components: {
@@ -67,11 +68,11 @@ export default {
       valueTime:'',
       placeholder:'请选择所需时间',
       label:'待上门时间',
-      columns: ['10分钟', '20分钟', '30分钟','40分钟','50分钟','1小时'],
+      columns2: [],
       inputAlign:'center',
       placeholder1:'请选择维修状态',
       label1:'维修状态',
-      columns1: ['待处理', '已到达', '处理中','已送原厂','已取回','完成'],
+      columns1: [],
       placeholder2:'请选择故障描述',
       label2:'故障描述',
       columns2: ['电脑坏了', '屏幕碎了'],
@@ -91,6 +92,7 @@ export default {
       miaoshu:'',
       message:'',
       state:'',
+      stateIndex:'',
       zichanmiaoshu:'',
       // placeholder:'请选择维修人员',
       // label:'维修人员',
@@ -102,31 +104,6 @@ export default {
       
       // msg: 'Welcome to Your Vue.js App'
     }
-  },
-  created() {
-    
-    const params=this.$route.params.params;
-    console.log(params)
-    this.name=params.name;
-    this.danhao=params.danhao;
-    this.duixiang=params.duixiang;
-    this.zuoji=params.zuoji;
-    this.dizhi=params.quyu+params.bangonshi;
-    this.time=params.time;
-    this.miaoshu=params.miaoshu;
-    this.state=params.state;
-    console.log(this.state)
-    if(this.state!=='待处理'){
-        // this.state=name
-        this.showTime=false;
-        this.showzichan=true;
-        this.showmiaoshu=true;
-      }else {
-        console.log(0)
-        // this.showTime=true;
-        this.showTime=true;
-        // this.showmiaoshu=false;
-      }
   },
   methods: {
     input(value){
@@ -164,24 +141,122 @@ export default {
     },
     gotolink(){
       const params=this.$route.params.params;
-      // 获取新数据，刷新页面与取值
       console.log(params)
-      if(this.state&&this.state==='待处理'&&this.valueTime){
-        Toast('已提交')
-        this.$router.go(-1)
-      }else if(this.state&&this.state!=='待处理'&&this.zichanmiaoshu&&this.zichanxinxi){
-        Toast('已提交')
-        this.$router.go(-1)
-      }else {
-        Toast('请填写信息')
-      }
+      // 获取新数据，刷新页面与取值
+      let repairState='';
+      let id=params.id;
+      let userId=params.userId;
+      let data1={'code':'WXZZ'};
+      getDataByCode(data1).then((res)=>{
+        // console.log(res)
+        const details=res.data.details;
+        let code=[];
+        details.forEach(element => {
+          if(this.state===element.code){
+            repairState=element.value
+          }     
+        });
+        // console.log(repairState)
+        if(this.state&&this.state==='待处理'&&this.valueTime){
+         
+          console.log(this.valueTime)
+          let ProcessData={'billId':id,'doorOfTime':this.valueTime,'repairState':repairState,'userId':userId,'remark':this.message}
+          console.log(ProcessData)
+          repairProcess(ProcessData).then((res)=>{
+            if(res.data==="success"){
+              Toast('已提交')
+            }
+          })          
+        // this.$router.go(-1)
+        }else if(this.state&&this.state!=='待处理'&&this.zichanmiaoshu&&this.zichanxinxi){
+          let ProcessData={'billId':id,'doorOfTime':'','repairState':repairState,'userId':userId}
+          console.log(ProcessData)
+          repairProcess(ProcessData).then((res)=>{
+            if(res.data==="success"){
+              Toast('已提交')
+            }
+          })    
+          Toast('已提交')
+          this.$router.go(-1)
+        }else {
+          Toast('请填写信息')
+        }
+      })
+      // console.log(repairState)
+
       // this.$router.push({
       //   path:'/startState',
       //   name:'StartState',
       //   params:{ params:item }
       // })
     },
-  }
+  },
+  created() {
+    let data1={'code':'WXZZ'};
+    let data2={'code':'DSMSJ'};
+    let data3={'code':'YCGZMS'};
+    let data4={'code':'YCZCBH'};
+    getDataByCode(data1).then((res)=>{
+      const details=res.data.details;
+      let code=[];
+      details.forEach(element => {
+        code.push(element.code)
+        console.log(code)
+        this.columns1=code
+      });
+    })
+    getDataByCode(data2).then((res)=>{
+      const details=res.data.details;
+      let code=[];
+      details.forEach(element => {
+        code.push(element.code)
+        this.columns2=code
+      });
+    })
+    getDataByCode(data3).then((res)=>{
+      const details=res.data.details;
+      let code=[];
+      details.forEach(element => {
+        code.push(element.code)
+        this.columns3=code
+      });
+    })
+    getDataByCode(data4).then((res)=>{
+      const details=res.data.details;
+      let code=[];
+      details.forEach(element => {
+        code.push(element.code)
+        this.columns4=code
+      });
+    })
+    const params=this.$route.params.params;
+    console.log(params)
+    this.name=params.realName;
+    this.danhao=params.repairNum;
+    this.duixiang=params.repairObj;
+    this.zuoji=params.tel;
+    this.dizhi=params.area+params.office;
+    this.time=params.createDate;
+    this.miaoshu=params.repairDesc;
+    this.state=params.repairState;
+    console.log(this.state)
+    if(params.repairState==="提交报修"||params.repairState==="确认指派"){
+      this.state='待处理'
+      this.showTime=true;
+    }
+    if(this.state!=='待处理'){
+        // this.state=name
+        this.showTime=false;
+        this.showzichan=true;
+        this.showmiaoshu=true;
+      }else {
+        console.log(0)
+        // this.showTime=true;
+        this.showTime=true;
+        // this.showmiaoshu=false;
+      }
+     
+  },
 }
 </script>
 
