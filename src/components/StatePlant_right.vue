@@ -22,10 +22,10 @@
         <p>办公室:{{item.bangongshi}}</p>
         <p>所属区域:{{item.quyu}}</p>
         <p>联系电话:{{item.phone}}</p> -->
-        <p>维修单号:{{item.danhao}}</p>
-        <p>维修对象:{{item.duixiang}}</p>
-        <p>地址:{{item.quyu}}</p>
-        <p>故障描述:{{item.miaoshu}}</p>
+        <p>维修单号:{{item.repairNum}}</p>
+        <p>维修对象:{{item.repairObj}}</p>
+        <p>地址:{{item.area}}{{item.office}}</p>
+        <p>故障描述:{{item.repairDesc}}</p>
          
         <!-- <p>故障描述:{{item.miaoshu}}</p> -->
       </div>

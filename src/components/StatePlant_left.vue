@@ -37,6 +37,7 @@
 
 <script>
 import Vue from 'vue'
+import {getHandleList,getDataByCodeAndVal,getRepairFactoryList} from '@/api/api'
 import Dropdown from './Dropdown'
 import Datetime from './Datetime'
 import field from './field'
@@ -86,12 +87,7 @@ export default {
       guzhangmiaoshu:'',
       zichanxinxi:'',
       columns3: ['资产编号', '资产编号'],
-      items:[
-        {'name':'张三','bangonshi':'c204','miaoshu':'电脑蓝屏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','phone':'123123122131','duixiang':'电脑','time':'2019-09-18 13:28','state':'厂家维修','danhao':'c123123123'},
-        {'name':'张三','bangonshi':'c201','miaoshu':'显示屏问题','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','phone':'123123122131','duixiang':'电脑','time':'2019-09-18 13:28','state':'已送回','danhao':'c133123123'},
-         {'name':'张三','bangonshi':'c202','miaoshu':'主机损坏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','phone':'123123122131','duixiang':'电脑','time':'2019-09-18 13:28','state':'厂家维修','danhao':'c143123123'},
-          {'name':'张三','bangonshi':'c203','miaoshu':'主机损坏','danwei':'市场局','chushi':'维修一部','bangongshi':'三里河','quyu':'三里河','phone':'123123122131','duixiang':'电脑','time':'2019-09-18 13:28','state':'已送回','danhao':'c153123123'},
-      ]
+      items:[]
       // msg: 'Welcome to Your Vue.js App'
     }
   },
@@ -149,20 +145,76 @@ export default {
     // }
 
   },
-  created() {
-    // this.items.map(item=>{
-    //   // console.log(item.state)
-    //   if(item.state==='待处理'||item.state==='已送达'){
-    //     this.display=true;
-    //   }else {
-    //     this.display=false;
-    //   }
-    // })
-      // this.$router.push({
-      //   path:'/Success',
-      //   name:'success',
-      //   params:{ word1: '接单成功',word2: '查看当前处理情况'  }
-      // })
+ created() {
+    let userId=JSON.parse(localStorage.getItem('temp')).userId;
+    let data1={'isHandle':0,'userId':userId}
+    let arr=[];
+    console.log(data1)
+    getRepairFactoryList(data1).then((res)=>{
+      console.log(res)
+        res.data.forEach((res)=>{
+          arr=res;
+          // console.log(res)
+          arr.createDate=this.getLocalTime(res.createDate);
+          arr.state=res.state;
+          arr.repairState=res.state;
+          if(arr.repairState===0){
+            arr.repairState='提交报修'
+          }else if(res.state===1){
+            arr.repairState='确认指派'
+          }else if(res.state===2){
+            arr.repairState='待处理'
+          }else if(res.state===3){
+            arr.repairState='已到达'
+          }else if(res.state===4){
+            arr.repairState='处理中'
+          }else if(res.state===5){
+            arr.repairState='已送原厂'
+          }else if(res.state===6){
+            arr.repairState='厂家维修'
+          }else if(res.state===7){
+            arr.repairState='已送回'
+          }else if(res.state===8){
+            arr.repairState='已取回'
+          }else{
+            arr.repairState='完成'
+          }
+          let data1={'code':'DW','value':res.unit};
+          let data2={'code':'CS','value':res.officeRoom};
+          let data3={'code':'SSQY','value':res.area};
+          let data4={'code':'GZMS','value':res.repairDesc};
+          let data5={'code':'WXDX','value':res.repairObj};
+          // console.log(data1)
+          getDataByCodeAndVal(data1).then((res1)=>{
+            // console.log(res)
+             arr.unit=res1.data
+              
+          })
+          getDataByCodeAndVal(data2).then((res1)=>{
+            // console.log(res)
+             arr.officeRoom=res1.data
+             res.bangongshi=res1.data;
+             
+          })
+          getDataByCodeAndVal(data3).then((res1)=>{
+            // console.log(res)
+             arr.area=res1.data
+             res.quyu=res1.data;
+          })
+           getDataByCodeAndVal(data4).then((res1)=>{
+            // console.log(res)
+             arr.repairDesc=res1.data
+             res.repairDesc=res1.data;
+          })
+           getDataByCodeAndVal(data5).then((res1)=>{
+            // console.log(res)
+             arr.repairObj=res1.data
+             res.repairObj=res1.data;
+          })
+
+          this.items.push(arr)
+        })
+    })
     },
 }
 </script>

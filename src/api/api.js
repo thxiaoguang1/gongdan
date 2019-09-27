@@ -17,3 +17,4 @@ export const getRepairById = params => { return axios.post(`${host}/gdRepair/get
 export const getHandleList = params => { return axios.post(`${host}/gdRepair/getHandleList`,Qs.stringify(params)) }
 export const repairProcess = params => { return axios.post(`${host}/gdRepair/repairProcess`,Qs.stringify(params)) }
 export const getSysConfig = () => { return axios.post(`${host}/gdWeixin/getSysConfig`) }
+export const getRepairFactoryList = params => { return axios.post(`${host}/gdRepair/getRepairFactoryList`,Qs.stringify(params)) }
