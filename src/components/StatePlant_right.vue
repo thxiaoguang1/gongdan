@@ -37,6 +37,7 @@
 
 <script>
 import Vue from 'vue'
+import {getHandleList,getDataByCodeAndVal,repairProcess,getAssignList,getSysConfig,getRepairFactoryList} from '@/api/api'
 import StartDatetime from './StartDatetime'
 import EndDatetime from './EndDatetime'
 import { mapGetters,mapActions } from "vuex";
@@ -101,7 +102,44 @@ export default {
       console.log(this.getStartTime.startTime)
       console.log(this.number)
       console.log(this.getEndTime.endTime)
+      this.number=this.number?this.number:'';
       if(this.getStartTime.startTime&&this.getEndTime.endTime||this.number){
+        let userId=JSON.parse(localStorage.getItem('temp')).userId;
+        let dataList={'isHandle':1,'startDate':this.getStartTime.startTime,'endDate':this.getEndTime.endTime,'repairNum':this.number,'userId':userId}
+        let arr=[];
+        let dataAndVal=[];
+        
+        getRepairFactoryList(dataList).then((res)=>{
+          
+          dataAndVal=res.data;
+          dataAndVal.forEach((res)=>{
+            res.state='完成';
+            res.stateDate=this.getLocalTime(res.stateDate);
+          })
+          if(res.data&&res.data.length){
+            let data1={'code':'DW','value':dataAndVal.unit};
+            let data2={'code':'CS','value':dataAndVal.officeRoom};
+            let data3={'code':'SSQY','value':dataAndVal.area};
+            // console.log(data1)
+            getDataByCodeAndVal(data1).then((res)=>{
+              // console.log(res)
+              dataAndVal.unit=res.data
+            })
+            getDataByCodeAndVal(data2).then((res)=>{
+              // console.log(res)
+              dataAndVal.officeRoom=res.data
+            })
+            getDataByCodeAndVal(data3).then((res)=>{
+              // console.log(res)
+              dataAndVal.area=res.data
+            })
+            console.log(dataAndVal)
+             this.items=(dataAndVal)
+           }else {
+               Notify('暂无数据');
+            }
+        })
+       
         this.display=true;
       }else{
           Toast('请选择起止时间或者订单号')

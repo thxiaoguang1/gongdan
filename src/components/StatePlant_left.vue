@@ -2,8 +2,8 @@
   <div>
     <van-panel v-for='(item,index) in items' class="evaluate" :key='index' v-if="!newButton">
       <div class="border">
-          <p>{{item.time}}</p>
-          <p>状态：{{item.state}}</p>
+          <p>{{item.stateDate}}</p>
+          <p>状态：{{item.repairState}}</p>
         </div>
       <div class="evaluate_list position">
         <!-- <p>姓名:{{item.name}}</p>
@@ -12,10 +12,10 @@
         <p>办公室:{{item.bangongshi}}</p>
         <p>所属区域:{{item.quyu}}</p>
         <p>联系电话:{{item.phone}}</p> -->
-        <p>维修单号:{{item.danhao}}</p>
-        <p>维修对象:{{item.duixiang}}</p>
-        <p>地址:{{item.quyu}}</p>
-        <p>故障描述:{{item.miaoshu}}</p>
+        <p>维修单号:{{item.repairNum}}</p>
+        <p>维修对象:{{item.repairObj}}</p>
+        <p>地址:{{item.area}}{{item.office}}</p>
+        <p>故障描述:{{item.repairDesc}}</p>
          
       </div>
    
@@ -24,7 +24,7 @@
      <dropdown :placeholder="placeholder3" :label='label3' :columns='columns3' :inputAlign='inputAlign' class="peple"></dropdown> -->
      <div class="evaluate_list position">
       <p>资产编号:</p>
-      <p>{{item.miaoshu}}</p>
+      <p>{{item.wxassetNum}}</p>
       
     </div>
   
@@ -95,6 +95,17 @@ export default {
     p(s) {
       return s < 10 ? '0' + s : s
     },
+    getLocalTime(date) { 
+       let t = new Date(date);   // 实例化时间戳  time.后面的是时间获取转换的对应方法
+        let y = t.getFullYear();
+        let m = t.getMonth()+1;
+        m = m<10?"0"+m:m;
+        let d = t.getDate()<10?"0"+t.getDate():t.getDate(); 
+        let h = t.getHours()<10?"0"+t.getHours():t.getHours();
+        let min = t.getMinutes()<10?"0"+t.getMinutes():t.getMinutes();
+        let s = t.getSeconds()<10?"0"+t.getSeconds():t.getSeconds();                     
+        return  y+"-"+m+"-"+d+" "+h+":"+min+":"+s;   // 返回给外面调用它的地方
+    },
     evaluate_list(value){
       console.log(value)
     },
@@ -155,7 +166,7 @@ export default {
         res.data.forEach((res)=>{
           arr=res;
           // console.log(res)
-          arr.createDate=this.getLocalTime(res.createDate);
+          arr.stateDate=this.getLocalTime(res.stateDate);
           arr.state=res.state;
           arr.repairState=res.state;
           if(arr.repairState===0){
@@ -184,6 +195,8 @@ export default {
           let data3={'code':'SSQY','value':res.area};
           let data4={'code':'GZMS','value':res.repairDesc};
           let data5={'code':'WXDX','value':res.repairObj};
+          let data6={'code':'WXGZMS','value':res.wxrepairDesc};
+          let data7={'code':'WXZCBH','value':res.wxassetNum};
           // console.log(data1)
           getDataByCodeAndVal(data1).then((res1)=>{
             // console.log(res)
@@ -210,6 +223,16 @@ export default {
             // console.log(res)
              arr.repairObj=res1.data
              res.repairObj=res1.data;
+          })
+          getDataByCodeAndVal(data6).then((res1)=>{
+            // console.log(res)
+             arr.wxrepairDesc=res1.data
+             res.wxrepairDesc=res1.data;
+          })
+           getDataByCodeAndVal(data7).then((res1)=>{
+            // console.log(res)
+             arr.wxassetNum=res1.data
+             res.wxassetNum=res1.data;
           })
 
           this.items.push(arr)

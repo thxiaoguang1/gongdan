@@ -2,7 +2,7 @@
   <div>
     <van-panel v-for='(item,index) in items' class="evaluate" :key='index' v-if="!newButton">
       <div class="border">
-          <p>{{item.createDate}}</p>
+          <p>{{item.stateDate}}</p>
           <p>状态：{{item.repairState}}</p>
         </div>
       <div class="evaluate_list position">
@@ -60,10 +60,8 @@ export default {
       disabled:true,
       placeholder:'请选择维修状态',
       label:'维修状态',
-      columns: ['待处理', '已到达', '处理中','已送原厂','已取回','完成'],
       placeholder1:'请选择所需时间',
       label1:'待上门时间',
-      columns1: ['10分钟', '20分钟', '30分钟','40分钟','50分钟','1小时'],
       startTime:'',
       placeholder2:'请选择故障描述',
       label2:'故障描述',
@@ -171,7 +169,7 @@ export default {
         res.data.forEach((res)=>{
           arr=res;
           console.log(res)
-          arr.createDate=this.getLocalTime(res.createDate);
+          arr.stateDate=this.getLocalTime(res.stateDate);
           arr.state=res.state;
           arr.repairState=res.state;
           if(arr.repairState===0){
